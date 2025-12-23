@@ -23,6 +23,14 @@ export const useDashboardStore = defineStore('dashboard', () => {
     { name: 'OPS', count: 90 }
   ])
 
+  // Hiring pipeline status
+    const hiringStatus = ref({
+    applicationReceived: 45,
+    interviewScheduled: 18,
+    hired: 12,
+    notAccepted: 15
+    })
+
   return {
     totalCompanies,
     totalDepartments,
@@ -32,6 +40,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
     departmentsTrend,
     employeesTrend,
     hiresTrend,
-    departmentDistribution
+    departmentDistribution,
+    hiringStatus
   }
 })
