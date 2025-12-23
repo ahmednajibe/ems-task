@@ -8,7 +8,7 @@ import Sidebar from './Sidebar.vue'
     <Sidebar />
     
     <!-- Main Content Area -->
-    <main class="flex-1 overflow-y-auto">
+    <main class="flex-1 overflow-y-auto scrollbar-hide">
       <slot />
     </main>
   </div>

@@ -64,12 +64,16 @@ const dashboardStore = useDashboardStore()
       <!-- Chart + Hiring Status - 2 Columns -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <!-- Employee Distribution Chart (2/3 width) -->
-        <div class="lg:col-span-2 bg-card rounded-3xl p-5 shadow-premium">
-          <div class="mb-4">
+        <div class="lg:col-span-2 bg-card rounded-3xl p-5 shadow-premium flex flex-col">
+          <div class="mb-9">
             <h2 class="text-xl font-semibold text-neutral-800">Employee Distribution</h2>
             <p class="text-sm text-neutral-600">Headcount by department</p>
           </div>
-          <EmployeeDistributionChart />
+          <div class="flex-1 flex items-center">
+            <div class="w-full">
+              <EmployeeDistributionChart />
+            </div>
+          </div>
         </div>
 
         <!-- Hiring Pipeline (1/3 width) -->
