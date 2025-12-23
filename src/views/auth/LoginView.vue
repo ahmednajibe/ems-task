@@ -33,7 +33,7 @@
 <template>
   <div class="min-h-screen bg-neutral-100 flex items-center justify-center p-4">
     <!-- Login Card -->
-    <div class="bg-white rounded-5xl shadow-medium p-12 w-full max-w-md">
+    <div class="bg-card rounded-5xl shadow-medium p-12 w-full max-w-md">
       
       <!-- Logo/Avatar -->
       <div class="flex justify-center mb-6">

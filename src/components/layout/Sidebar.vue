@@ -41,9 +41,9 @@ const handleLogout = () => {
 </script>
 
 <template>
-  <aside class="w-64 bg-white h-screen flex flex-col border-r border-neutral-200">
+  <aside class="w-64 bg-card h-[calc(100vh-2rem)] flex flex-col m-4 rounded-3xl shadow-premium">
     <!-- Logo Section -->
-    <div class="p-6 border-b border-neutral-200">
+    <div class="p-6">
       <div class="flex items-center gap-3">
         <div class="w-12 h-12 rounded-full bg-primary-500 flex items-center justify-center shadow-medium">
           <SparklesIcon class="w-6 h-6 text-white" />
@@ -74,7 +74,7 @@ const handleLogout = () => {
     </nav>
 
     <!-- Logout Button -->
-    <div class="p-4 border-t border-neutral-200">
+    <div class="p-4">
       <button
         @click="handleLogout"
         class="flex items-center gap-3 px-4 py-3 rounded-xl w-full text-neutral-600 hover:bg-red-50 hover:text-red-600 transition-all duration-200"

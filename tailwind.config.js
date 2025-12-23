@@ -32,7 +32,7 @@ export default {
         // Neutral Grays
         neutral: {
           50:  '#F9FAFB',   // Almost white
-          100: '#F8FBF8',  // Page background
+          100: '#F7FAF7',  // Page background
           200: '#E5E7EB',  // Borders
           300: '#D1D5DB',  // Disabled
           400: '#9CA3AF',  // Placeholder
@@ -42,6 +42,7 @@ export default {
           800: '#1A202C',  // Headings
           900: '#111827',  // Almost black
         },
+        card: '#FFFFFF',
       },
       borderRadius: {
         '4xl': '2rem',    // 32px

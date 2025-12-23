@@ -10,7 +10,7 @@ defineProps<Props>()
 </script>
 
 <template>
-  <div class="bg-white rounded-3xl p-6 shadow-soft hover:shadow-premium transition-all">
+  <div class="bg-card rounded-3xl p-6 shadow-soft hover:shadow-premium transition-all">
     <!-- Icon and Trend -->
     <div class="flex items-start justify-between mb-4">
       <!-- Icon -->
