@@ -17,7 +17,7 @@ const colorClasses = {
 </script>
 
 <template>
-  <div class="bg-white rounded-2xl p-4 border border-neutral-200 hover:shadow-md transition-shadow">
+  <div class="bg-white rounded-2xl p-4 shadow-soft hover:shadow-medium transition-all">
     <div class="flex items-center gap-3">
       <!-- Icon -->
       <div :class="['p-2 rounded-xl', colorClasses[color]]">

@@ -8,7 +8,8 @@ import {
   BuildingLibraryIcon,
   UsersIcon,
   Cog6ToothIcon,
-  ArrowLeftEndOnRectangleIcon  
+  ArrowLeftEndOnRectangleIcon,  
+  SparklesIcon  
 } from '@heroicons/vue/24/outline'
 import { useToastStore } from '@/store/toast'
 
@@ -44,8 +45,8 @@ const handleLogout = () => {
     <!-- Logo Section -->
     <div class="p-6 border-b border-neutral-200">
       <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-full bg-primary-500 flex items-center justify-center">
-          <span class="text-white font-bold text-lg">OM</span>
+        <div class="w-12 h-12 rounded-full bg-primary-500 flex items-center justify-center shadow-medium">
+          <SparklesIcon class="w-6 h-6 text-white" />
         </div>
         <div>
           <h1 class="text-lg font-bold text-neutral-800">OrgManager</h1>
@@ -63,8 +64,8 @@ const handleLogout = () => {
         :class="[
           'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200',
           isActive(item.path)
-            ? 'bg-primary-500 text-white shadow-md'
-            : 'text-neutral-600 hover:bg-neutral-100'
+            ? 'bg-primary-500 text-white shadow-premium'
+            : 'text-neutral-600 hover:bg-primary-50'
         ]"
       >
         <component :is="item.icon" class="w-5 h-5" />

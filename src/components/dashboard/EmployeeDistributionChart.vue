@@ -34,7 +34,7 @@ const chartData = computed(() => {
       {
         label: 'Employees',
         data,
-        backgroundColor: '#3D6B5C',
+        backgroundColor: '#2D5A43',
         borderRadius: 8,
         barThickness: 40,
       }
@@ -54,7 +54,7 @@ const chartOptions = computed<ChartOptions<'bar'>>(() => ({
       padding: 12,
       titleColor: '#fff',
       bodyColor: '#fff',
-      borderColor: '#3D6B5C',
+      borderColor: '#2D5A43',
       borderWidth: 1
     }
   },

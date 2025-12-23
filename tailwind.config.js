@@ -14,7 +14,7 @@ export default {
           200: '#C8EDD6',  // Subtle highlights
           300: '#9FE2BA',  // Medium light
           400: '#65C466',  // Active states, medium green
-          500: '#3D6B5C',  // PRIMARY - Buttons, dark green
+          500: '#2D5A43',  // PRIMARY - Buttons, dark green
           600: '#325A4B',  // Hover dark
           700: '#284739',  // Deeper dark
           800: '#1E3428',  // Very dark
@@ -22,17 +22,17 @@ export default {
         },
         // Lime Accent (for highlights and special elements)
         accent: {
-          100: '#F4FCE3',  // Very light lime
-          200: '#E8F5BA',  // Light lime
-          300: '#D9F99D',  // Medium lime
-          400: '#BEF264',  // Bright lime
-          500: '#A3E635',  // PRIMARY ACCENT - Budget, highlights
-          600: '#84CC16',  // Darker lime
+          100: '#F4FCE3',
+          200: '#E8F5BA',
+          300: '#D9F99D',
+          400: '#BEF264',
+          500: '#A3E635',
+          600: '#84CC16',
         },
         // Neutral Grays
         neutral: {
-          50: '#F9FAFB',   // Almost white
-          100: '#F5F5F5',  // Page background
+          50:  '#F9FAFB',   // Almost white
+          100: '#F8FBF8',  // Page background
           200: '#E5E7EB',  // Borders
           300: '#D1D5DB',  // Disabled
           400: '#9CA3AF',  // Placeholder
@@ -49,8 +49,8 @@ export default {
       },
       boxShadow: {
         'soft': '0 2px 8px rgba(0, 0, 0, 0.04)',
-        'medium': '0 4px 16px rgba(0, 0, 0, 0.08)',
-        'strong': '0 8px 24px rgba(0, 0, 0, 0.12)',
+        'medium': '0 4px 16px rgba(0, 0, 0, 0.06)',
+        'strong': '0 10px 25px rgba(0, 0, 0, 0.0.05)',
       },
     },
   },

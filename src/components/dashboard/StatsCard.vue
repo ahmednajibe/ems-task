@@ -10,11 +10,11 @@ defineProps<Props>()
 </script>
 
 <template>
-  <div class="bg-white rounded-3xl p-6 border border-neutral-200 hover:shadow-md transition-shadow">
+  <div class="bg-white rounded-3xl p-6 shadow-soft hover:shadow-premium transition-all">
     <!-- Icon and Trend -->
     <div class="flex items-start justify-between mb-4">
       <!-- Icon -->
-      <div class="p-3 bg-primary-50 rounded-2xl">
+      <div class="p-3 bg-primary-100 rounded-2xl">
         <component :is="icon" class="w-6 h-6 text-primary-500" />
       </div>
 
