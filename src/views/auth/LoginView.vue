@@ -1,15 +1,35 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/store/auth'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
-// Reactive variables (متغيرات تفاعلية)
-const username = ref('')
+
+// Router for navigation (للتنقل)
+const router = useRouter()
+
+// Auth store (متجر المصادقة)
+const authStore = useAuthStore()
+
+// Form data (بيانات النموذج)
+const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 
 // Handle form submission (معالجة إرسال النموذج)
-const handleLogin = () => {
-  console.log('Login attempt:', { username: username.value, password: password.value })
-  // TODO: سنضيف منطق تسجيل الدخول الحقيقي لاحقاً
+const handleLogin = async () => {
+  // Basic validation (تحقق بسيط)
+  if (!email.value || !password.value) {
+    authStore.error = 'Please enter email and password'
+    return
+  }
+
+  // Call login action from store
+  const success = await authStore.login(email.value, password.value)
+
+  if (success) {
+    // Redirect to dashboard (توجيه للوحة التحكم)
+    router.push('/dashboard')
+  }
 }
 </script>
 
@@ -33,18 +53,23 @@ const handleLogin = () => {
         Enter your credentials to manage your organization.
       </p>
 
+      <!-- Error Message -->
+      <div v-if="authStore.error" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+        <p class="text-sm text-red-600">{{ authStore.error }}</p>
+      </div>
+
       <!-- Login Form -->
       <form @submit.prevent="handleLogin" class="space-y-6">
         
         <!-- Username Input -->
         <div>
-          <label for="username" class="block text-sm font-medium text-neutral-700 mb-2">
+          <label for="email" class="block text-sm font-medium text-neutral-700 mb-2">
             Email or Username
           </label>
           <input
-            id="username"
-            v-model="username"
-            type="text"
+            id="email"
+            v-model="email"
+            type="email"
             placeholder="Enter your email"
             class="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
           />
@@ -84,9 +109,16 @@ const handleLogin = () => {
         <!-- Login Button -->
         <button
           type="submit"
-          class="w-full bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 rounded-full transition-colors shadow-soft"
+          :disabled="authStore.isLoading"
+          :class="[
+            'w-full font-medium py-3 rounded-full transition-colors shadow-soft',
+            authStore.isLoading
+              ? 'bg-neutral-300 text-neutral-500 cursor-not-allowed'
+              : 'bg-primary-500 hover:bg-primary-600 text-white'
+          ]"
         >
-          Login
+          <span v-if="authStore.isLoading">Loading...</span>
+          <span v-else>Login</span>
         </button>
 
       </form>
