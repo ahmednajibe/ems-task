@@ -71,7 +71,7 @@ const handleDelete = (id: string) => {
   }
 }
 
-const handleView = (id: string) => {
+const handleView = (_id: string) => {
   // TODO: Navigate to company detail page
   toastStore.info('Company detail page - Coming soon!')
 }
