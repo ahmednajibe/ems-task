@@ -5,80 +5,44 @@ import { ref, computed } from 'vue'
 export interface Company {
   id: string
   name: string
-  initials: string
-  location: string
-  industry: string
+  departmentCount: number
   employeeCount: number
-  status: 'active' | 'pending' | 'inactive'
 }
 
 export const useCompaniesStore = defineStore('companies', () => {
   // Mock data
   const companies = ref<Company[]>([
     {
-      id: '1',
-      name: 'Acme Corp',
-      initials: 'AC',
-      location: 'San Francisco, CA',
-      industry: 'Technology',
-      employeeCount: 124,
-      status: 'active'
+        id: '1',
+        name: 'Acme Corp',
+        departmentCount: 5,
+        employeeCount: 124
     },
     {
-      id: '2',
-      name: 'Globex Inc.',
-      initials: 'GL',
-      location: 'New York, NY',
-      industry: 'Logistics',
-      employeeCount: 85,
-      status: 'active'
+        id: '2',
+        name: 'Globex Inc.',
+        departmentCount: 3,
+        employeeCount: 85
     },
     {
-      id: '3',
-      name: 'Soylent Corp',
-      initials: 'SO',
-      location: 'Detroit, MI',
-      industry: 'Food Proc.',
-      employeeCount: 340,
-      status: 'pending'
+        id: '3',
+        name: 'Soylent Corp',
+        departmentCount: 8,
+        employeeCount: 340
     },
     {
-      id: '4',
-      name: 'Umbrella Corp',
-      initials: 'UM',
-      location: 'Raccoon City',
-      industry: 'Pharma',
-      employeeCount: 5000,
-      status: 'inactive'
+        id: '4',
+        name: 'Umbrella Corp',
+        departmentCount: 12,
+        employeeCount: 5000
     },
     {
-      id: '5',
-      name: 'Cyberdyne',
-      initials: 'CY',
-      location: 'Los Angeles, CA',
-      industry: 'Defense',
-      employeeCount: 200,
-      status: 'active'
-    },
-    {
-      id: '6',
-      name: 'Stark Industries',
-      initials: 'SI',
-      location: 'New York, NY',
-      industry: 'Technology',
-      employeeCount: 1500,
-      status: 'active'
-    },
-    {
-      id: '7',
-      name: 'Wayne Enterprises',
-      initials: 'WE',
-      location: 'Gotham City',
-      industry: 'Technology',
-      employeeCount: 2300,
-      status: 'active'
+        id: '5',
+        name: 'Cyberdyne Systems',
+        departmentCount: 4,
+        employeeCount: 200
     }
-  ])
+    ])
 
   // Search query
   const searchQuery = ref('')
@@ -93,9 +57,7 @@ export const useCompaniesStore = defineStore('companies', () => {
     
     const query = searchQuery.value.toLowerCase()
     return companies.value.filter(company =>
-      company.name.toLowerCase().includes(query) ||
-      company.industry.toLowerCase().includes(query) ||
-      company.location.toLowerCase().includes(query)
+        company.name.toLowerCase().includes(query)
     )
   })
 

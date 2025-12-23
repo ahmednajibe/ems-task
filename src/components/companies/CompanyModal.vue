@@ -5,7 +5,7 @@ import { XMarkIcon } from '@heroicons/vue/24/outline'
 
 interface Props {
   isOpen: boolean
-  company?: Company | null  // null = Add mode, Company = Edit mode
+  company?: Company | null
 }
 
 interface Emits {
@@ -19,46 +19,34 @@ const emit = defineEmits<Emits>()
 // Form data
 const formData = ref({
   name: '',
-  initials: '',
-  location: '',
-  industry: '',
-  employeeCount: 0,
-  status: 'active' as Company['status']
+  departmentCount: 0,
+  employeeCount: 0
 })
 
+// Reset form
 const resetForm = () => {
   formData.value = {
     name: '',
-    initials: '',
-    location: '',
-    industry: '',
-    employeeCount: 0,
-    status: 'active'
+    departmentCount: 0,
+    employeeCount: 0
   }
 }
 
-// Watch for company prop changes (when editing)
+// Watch for company prop changes
 watch(() => props.company, (company) => {
   if (company) {
-    // Edit mode - fill form with existing data
     formData.value = {
       name: company.name,
-      initials: company.initials,
-      location: company.location,
-      industry: company.industry,
-      employeeCount: company.employeeCount,
-      status: company.status
+      departmentCount: company.departmentCount,
+      employeeCount: company.employeeCount
     }
   } else {
-    // Add mode - reset form
     resetForm()
   }
 }, { immediate: true })
 
-
 const handleSubmit = () => {
-  // Validation
-  if (!formData.value.name || !formData.value.industry) {
+  if (!formData.value.name) {
     return
   }
   
@@ -111,52 +99,18 @@ const handleClose = () => {
             />
           </div>
 
-          <!-- Initials -->
+          <!-- Department Count -->
           <div>
             <label class="block text-sm font-medium text-neutral-700 mb-2">
-              Initials *
+              Number of Departments
             </label>
             <input
-              v-model="formData.initials"
-              type="text"
-              required
-              maxlength="2"
-              placeholder="e.g. AC"
-              class="w-full px-4 py-2.5 bg-white border border-neutral-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all uppercase"
-            />
-          </div>
-
-          <!-- Location -->
-          <div>
-            <label class="block text-sm font-medium text-neutral-700 mb-2">
-              Headquarters Location *
-            </label>
-            <input
-              v-model="formData.location"
-              type="text"
-              required
-              placeholder="e.g. San Francisco, CA"
+              v-model.number="formData.departmentCount"
+              type="number"
+              min="0"
+              placeholder="e.g. 5"
               class="w-full px-4 py-2.5 bg-white border border-neutral-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
             />
-          </div>
-
-          <!-- Industry -->
-          <div>
-            <label class="block text-sm font-medium text-neutral-700 mb-2">
-              Industry *
-            </label>
-            <select
-              v-model="formData.industry"
-              required
-              class="w-full px-4 py-2.5 bg-white border border-neutral-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
-            >
-              <option value="">Select industry...</option>
-              <option value="Technology">Technology</option>
-              <option value="Logistics">Logistics</option>
-              <option value="Food Proc.">Food Processing</option>
-              <option value="Pharma">Pharmaceutical</option>
-              <option value="Defense">Defense</option>
-            </select>
           </div>
 
           <!-- Employee Count -->
@@ -171,21 +125,6 @@ const handleClose = () => {
               placeholder="e.g. 124"
               class="w-full px-4 py-2.5 bg-white border border-neutral-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
             />
-          </div>
-
-          <!-- Status -->
-          <div>
-            <label class="block text-sm font-medium text-neutral-700 mb-2">
-              Status
-            </label>
-            <select
-              v-model="formData.status"
-              class="w-full px-4 py-2.5 bg-white border border-neutral-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
-            >
-              <option value="active">Active</option>
-              <option value="pending">Pending</option>
-              <option value="inactive">Inactive</option>
-            </select>
           </div>
 
           <!-- Actions -->
@@ -211,7 +150,6 @@ const handleClose = () => {
 </template>
 
 <style scoped>
-/* Modal Animation */
 .modal-enter-active,
 .modal-leave-active {
   transition: opacity 0.3s ease;
