@@ -1,62 +1,64 @@
 <script setup lang="ts">
-  import { useAuthStore } from '@/store/auth'
-  import { useToastStore } from '@/store/toast'
-  import { useRouter } from 'vue-router'
-  const authStore = useAuthStore()
-  const toastStore = useToastStore()
-  const router = useRouter()
-  const handleLogout = () => {
-    authStore.logout()
-    toastStore.info('You have been logged out')
-    router.push('/login')
-  }
+import { useAuthStore } from '@/store/auth'
+import { useDashboardStore } from '@/store/dashboard'
+import DashboardLayout from '@/components/layout/DashboardLayout.vue'
+import StatsCard from '@/components/dashboard/StatsCard.vue'
+import {
+  BuildingOfficeIcon,
+  BuildingLibraryIcon,
+  UsersIcon,
+  UserPlusIcon
+} from '@heroicons/vue/24/outline'
+
+const authStore = useAuthStore()
+const dashboardStore = useDashboardStore()
 </script>
 
 <template>
-  <div class="min-h-screen bg-neutral-100 p-8">
-    <div class="max-w-4xl mx-auto">
-      <!-- Header -->
-      <div class="bg-white rounded-5xl shadow-medium p-8 mb-6">
-        <div class="flex items-center justify-between">
-          <div>
-            <h1 class="text-3xl font-bold text-neutral-800 mb-2">
-              Welcome, {{ authStore.user?.name }}!
-            </h1>
-            <p class="text-neutral-600">
-              Role: <span class="font-medium text-primary-500">{{ authStore.user?.role }}</span>
-            </p>
-          </div>
-          <button
-            @click="handleLogout"
-            class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-full transition-colors"
-          >
-            Logout
-          </button>
-        </div>
+  <DashboardLayout>
+    <!-- Header -->
+    <div class="bg-white border-b border-neutral-200 px-8 py-6">
+      <h1 class="text-2xl font-bold text-neutral-800">Summary Dashboard</h1>
+      <p class="text-sm text-neutral-600">Welcome back, {{ authStore.user?.name }}</p>
+    </div>
+
+    <!-- Content -->
+    <div class="p-8 space-y-6">
+      <!-- Stats Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatsCard
+          title="Total Companies"
+          :value="dashboardStore.totalCompanies"
+          :icon="BuildingOfficeIcon"
+          :trend="dashboardStore.companiesTrend"
+        />
+        
+        <StatsCard
+          title="Departments"
+          :value="dashboardStore.totalDepartments"
+          :icon="BuildingLibraryIcon"
+          :trend="dashboardStore.departmentsTrend"
+        />
+        
+        <StatsCard
+          title="Total Employees"
+          :value="dashboardStore.totalEmployees.toLocaleString()"
+          :icon="UsersIcon"
+          :trend="dashboardStore.employeesTrend"
+        />
+        
+        <StatsCard
+          title="New Hires"
+          :value="dashboardStore.newHires"
+          :icon="UserPlusIcon"
+          :trend="dashboardStore.hiresTrend"
+        />
       </div>
 
-      <!-- User Info Card -->
-      <div class="bg-white rounded-5xl shadow-medium p-8">
-        <h2 class="text-xl font-semibold text-neutral-800 mb-4">User Information</h2>
-        <div class="space-y-3">
-          <div>
-            <span class="text-neutral-600">ID:</span>
-            <span class="ml-2 font-medium">{{ authStore.user?.id }}</span>
-          </div>
-          <div>
-            <span class="text-neutral-600">Email:</span>
-            <span class="ml-2 font-medium">{{ authStore.user?.email }}</span>
-          </div>
-          <div>
-            <span class="text-neutral-600">Avatar:</span>
-            <span class="ml-2 font-medium">{{ authStore.user?.avatar }}</span>
-          </div>
-          <div>
-            <span class="text-neutral-600">Authenticated:</span>
-            <span class="ml-2 font-medium text-green-600">{{ authStore.isAuthenticated ? 'Yes' : 'No' }}</span>
-          </div>
-        </div>
+      <!-- Placeholder for Charts (next step) -->
+      <div class="bg-white rounded-3xl p-8 border border-neutral-200">
+        <p class="text-neutral-600">Charts will go here next! 📊</p>
       </div>
     </div>
-  </div>
+  </DashboardLayout>
 </template>
