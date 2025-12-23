@@ -29,9 +29,9 @@ const dashboardStore = useDashboardStore()
     />
 
     <!-- Content -->
-    <div class="p-8 space-y-6">
+    <div class="p-4 space-y-4">
       <!-- Stats Cards Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatsCard
           title="Total Companies"
           :value="dashboardStore.totalCompanies"
@@ -62,10 +62,10 @@ const dashboardStore = useDashboardStore()
       </div>
 
       <!-- Chart + Hiring Status - 2 Columns -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <!-- Employee Distribution Chart (2/3 width) -->
-        <div class="lg:col-span-2 bg-card rounded-3xl p-8 shadow-premium">
-          <div class="mb-6">
+        <div class="lg:col-span-2 bg-card rounded-3xl p-5 shadow-premium">
+          <div class="mb-4">
             <h2 class="text-xl font-semibold text-neutral-800">Employee Distribution</h2>
             <p class="text-sm text-neutral-600">Headcount by department</p>
           </div>
@@ -73,9 +73,9 @@ const dashboardStore = useDashboardStore()
         </div>
 
         <!-- Hiring Pipeline (1/3 width) -->
-        <div class="bg-card rounded-3xl p-6 shadow-premium">
-          <h2 class="text-lg font-semibold text-neutral-800 mb-4">Hiring Pipeline</h2>
-          <div class="space-y-3">
+        <div class="bg-card rounded-3xl p-5 shadow-premium">
+          <h2 class="text-lg font-semibold text-neutral-800 mb-3">Hiring Pipeline</h2>
+          <div class="space-y-2">
             <HiringStatusCard
               label="Application Received"
               :count="dashboardStore.hiringStatus.applicationReceived"

@@ -7,8 +7,8 @@ import {
 </script>
 
 <template>
-  <div class="bg-card rounded-3xl p-6 shadow-premium">
-    <h2 class="text-lg font-semibold text-neutral-800 mb-4">Quick Actions</h2>
+  <div class="bg-card rounded-3xl p-5 shadow-premium">
+    <h2 class="text-lg font-semibold text-neutral-800 mb-3">Quick Actions</h2>
     
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <!-- Add Company -->

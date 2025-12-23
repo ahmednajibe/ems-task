@@ -22,7 +22,7 @@ const userInitials = () => {
 </script>
 
 <template>
-  <div class="  px-8 py-6 flex items-center justify-between">
+  <div class="  px-6 py-4 flex items-center justify-between">
     <!-- Title Section -->
     <div>
       <h1 class="text-2xl font-bold text-neutral-800">{{ title }}</h1>
