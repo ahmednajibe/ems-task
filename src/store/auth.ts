@@ -1,3 +1,4 @@
+import { useToastStore } from './toast'
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
@@ -12,6 +13,9 @@ interface User {
 
 // Define the auth store (تعريف متجر المصادقة)
 export const useAuthStore = defineStore('auth', () => {
+
+  const toastStore = useToastStore()
+
   // State (الحالة - البيانات المخزنة)
   const user = ref<User | null>(null)
   const token = ref<string | null>(null)
@@ -68,6 +72,8 @@ export const useAuthStore = defineStore('auth', () => {
       const foundUser = mockUsers[email]
 
       if (!foundUser || foundUser.password !== password) {
+        error.value = 'Invalid email or password'
+        toastStore.error('Invalid email or password')  // ← 🆕
         throw new Error('Invalid email or password')
       }
 
@@ -80,9 +86,12 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.setItem('auth_token', token.value)
       localStorage.setItem('auth_user', JSON.stringify(userData))
 
+      toastStore.success(`Welcome back, ${userData.name}!`)
+
       return true
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Login failed'
+      toastStore.error(error.value)
       return false
     } finally {
       isLoading.value = false
@@ -95,6 +104,7 @@ export const useAuthStore = defineStore('auth', () => {
     token.value = null
     localStorage.removeItem('auth_token')
     localStorage.removeItem('auth_user')
+    toastStore.info('You have been logged out')
   }
 
   // Restore session from localStorage (استعادة الجلسة)

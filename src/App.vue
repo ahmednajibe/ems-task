@@ -1,9 +1,10 @@
 <script setup lang="ts">
-// No JavaScript needed here!
+  import ToastContainer from '@/components/common/ToastContainer.vue'
 </script>
 
 <template>
   <RouterView />
+  <ToastContainer />
 </template>
 
 <style>
