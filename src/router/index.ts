@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@/views/auth/LoginView.vue'
 import DashboardView from '@/views/DashboardView.vue'
+import CompaniesView from '@/views/CompaniesView.vue'
 // Define routes (تعريف المسارات)
 const routes = [
   {
@@ -16,6 +17,11 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: DashboardView
+  },
+  {
+    path: '/companies',
+    name: 'Companies',
+    component: CompaniesView
   }
 ]
 
