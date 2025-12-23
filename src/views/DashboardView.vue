@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { useAuthStore } from '@/store/auth'
-import { useRouter } from 'vue-router'
-
-const authStore = useAuthStore()
-const router = useRouter()
-
-const handleLogout = () => {
-  authStore.logout()
-  router.push('/login')
-}
+  import { useAuthStore } from '@/store/auth'
+  import { useToastStore } from '@/store/toast'
+  import { useRouter } from 'vue-router'
+  const authStore = useAuthStore()
+  const toastStore = useToastStore()
+  const router = useRouter()
+  const handleLogout = () => {
+    authStore.logout()
+    toastStore.info('You have been logged out')
+    router.push('/login')
+  }
 </script>
 
 <template>

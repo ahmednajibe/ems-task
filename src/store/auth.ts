@@ -1,8 +1,8 @@
-import { useToastStore } from './toast'
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+// import { useToastStore } from './toast'
 
-// User interface (واجهة المستخدم)
+// User interface
 interface User {
   id: string
   email: string
@@ -11,37 +11,28 @@ interface User {
   avatar?: string
 }
 
-// Define the auth store (تعريف متجر المصادقة)
 export const useAuthStore = defineStore('auth', () => {
-
-  const toastStore = useToastStore()
-
-  // State (الحالة - البيانات المخزنة)
+  // State
   const user = ref<User | null>(null)
   const token = ref<string | null>(null)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
-  // Getters (قراءة البيانات المحسوبة)
+  // Getters
   const isAuthenticated = computed(() => !!user.value)
   const userRole = computed(() => user.value?.role || null)
   const isAdmin = computed(() => user.value?.role === 'admin')
   const isManager = computed(() => user.value?.role === 'manager')
   const isEmployee = computed(() => user.value?.role === 'employee')
 
-  // Actions (الأفعال - تعديل البيانات)
-  
-  // Login action (تسجيل الدخول)
+  // Actions
   async function login(email: string, password: string) {
     isLoading.value = true
     error.value = null
 
     try {
-      // TODO: Replace with real API call later
-      // Mock authentication (محاكاة تسجيل دخول)
       await new Promise(resolve => setTimeout(resolve, 1000))
 
-      // Mock users database
       const mockUsers: Record<string, User & { password: string }> = {
         'admin@org.com': {
           id: '1',
@@ -72,42 +63,32 @@ export const useAuthStore = defineStore('auth', () => {
       const foundUser = mockUsers[email]
 
       if (!foundUser || foundUser.password !== password) {
-        error.value = 'Invalid email or password'
-        toastStore.error('Invalid email or password')  // ← 🆕
         throw new Error('Invalid email or password')
       }
 
-      // Set user data (حفظ بيانات المستخدم)
       const { password: _, ...userData } = foundUser
       user.value = userData
       token.value = 'mock-jwt-token-' + Date.now()
 
-      // Save to localStorage (حفظ في المتصفح)
       localStorage.setItem('auth_token', token.value)
       localStorage.setItem('auth_user', JSON.stringify(userData))
-
-      toastStore.success(`Welcome back, ${userData.name}!`)
 
       return true
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Login failed'
-      toastStore.error(error.value)
       return false
     } finally {
       isLoading.value = false
     }
   }
 
-  // Logout action (تسجيل الخروج)
   function logout() {
     user.value = null
     token.value = null
     localStorage.removeItem('auth_token')
     localStorage.removeItem('auth_user')
-    toastStore.info('You have been logged out')
   }
 
-  // Restore session from localStorage (استعادة الجلسة)
   function restoreSession() {
     const savedToken = localStorage.getItem('auth_token')
     const savedUser = localStorage.getItem('auth_user')
@@ -118,22 +99,18 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // Initialize (تهيئة عند بداية التطبيق)
   restoreSession()
 
   return {
-    // State
     user,
     token,
     isLoading,
     error,
-    // Getters
     isAuthenticated,
     userRole,
     isAdmin,
     isManager,
     isEmployee,
-    // Actions
     login,
     logout,
     restoreSession

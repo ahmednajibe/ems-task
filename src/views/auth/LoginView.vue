@@ -1,36 +1,33 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/store/auth'
-import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
+  import { ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { useAuthStore } from '@/store/auth'
+  import { useToastStore } from '@/store/toast'
+  import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
 
-// Router for navigation (للتنقل)
-const router = useRouter()
+  const router = useRouter()
+  const authStore = useAuthStore()
+  const toastStore = useToastStore()
 
-// Auth store (متجر المصادقة)
-const authStore = useAuthStore()
+  const email = ref('')
+  const password = ref('')
+  const showPassword = ref(false)
 
-// Form data (بيانات النموذج)
-const email = ref('')
-const password = ref('')
-const showPassword = ref(false)
+  const handleLogin = async () => {
+    if (!email.value || !password.value) {
+      toastStore.error('Please enter email and password')
+      return
+    }
 
-// Handle form submission (معالجة إرسال النموذج)
-const handleLogin = async () => {
-  // Basic validation (تحقق بسيط)
-  if (!email.value || !password.value) {
-    authStore.error = 'Please enter email and password'
-    return
+    const success = await authStore.login(email.value, password.value)
+
+    if (success) {
+      toastStore.success(`Welcome back, ${authStore.user?.name}!`)
+      router.push('/dashboard')
+    } else {
+      toastStore.error(authStore.error || 'Login failed')
+    }
   }
-
-  // Call login action from store
-  const success = await authStore.login(email.value, password.value)
-
-  if (success) {
-    // Redirect to dashboard (توجيه للوحة التحكم)
-    router.push('/dashboard')
-  }
-}
 </script>
 
 <template>
@@ -52,11 +49,6 @@ const handleLogin = async () => {
       <p class="text-neutral-600 text-center mb-8">
         Enter your credentials to manage your organization.
       </p>
-
-      <!-- Error Message -->
-      <div v-if="authStore.error" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
-        <p class="text-sm text-red-600">{{ authStore.error }}</p>
-      </div>
 
       <!-- Login Form -->
       <form @submit.prevent="handleLogin" class="space-y-6">
