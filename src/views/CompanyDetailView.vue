@@ -73,37 +73,45 @@ const handleBack = () => {
             </div>
 
             <!-- Title & Actions -->
-            <div class="flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-bold text-neutral-800">{{ company.name }} Details</h1>
-                <p class="text-sm text-neutral-600 mt-1">
-                View and manage company information
-                </p>
-            </div>
 
-            <div class="flex gap-2">
-                <button
-                @click="handleBack"
-                class="flex items-center gap-2 px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-full transition-colors"
-                >
-                <ArrowLeftIcon class="w-4 h-4" />
-                Back
-                </button>
-                <button
-                @click="handleEdit"
-                class="flex items-center gap-2 px-4 py-2 bg-primary-100 hover:bg-primary-200 text-primary-700 rounded-full transition-colors"
-                >
-                <PencilIcon class="w-4 h-4" />
-                Edit
-                </button>
-                <button
-                @click="handleDelete"
-                class="flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-full transition-colors"
-                >
-                <TrashIcon class="w-4 h-4" />
-                Delete
-                </button>
-            </div>
+            <div class="flex items-start justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                    <h1 class="text-xl md:text-2xl font-bold text-neutral-800 break-words">
+                    {{ company.name }} Details
+                    </h1>
+                    <p class="text-xs md:text-sm text-neutral-600 mt-1">
+                    View and manage company information
+                    </p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-2 flex-shrink-0">
+                    <!-- Back Button -->
+                    <button
+                    @click="handleBack"
+                    class="flex items-center justify-center gap-2 px-3 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-lg md:rounded-full transition-colors text-sm whitespace-nowrap"
+                    >
+                    <ArrowLeftIcon class="w-4 h-4" />
+                    <span class="hidden sm:inline">Back</span>
+                    </button>
+                    
+                    <!-- Edit Button -->
+                    <button
+                    @click="handleEdit"
+                    class="flex items-center justify-center gap-2 px-3 py-2 bg-primary-100 hover:bg-primary-200 text-primary-700 rounded-lg md:rounded-full transition-colors text-sm whitespace-nowrap"
+                    >
+                    <PencilIcon class="w-4 h-4" />
+                    <span class="hidden sm:inline">Edit</span>
+                    </button>
+                    
+                    <!-- Delete Button -->
+                    <button
+                    @click="handleDelete"
+                    class="flex items-center justify-center gap-2 px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg md:rounded-full transition-colors text-sm whitespace-nowrap"
+                    >
+                    <TrashIcon class="w-4 h-4" />
+                    <span class="hidden sm:inline">Delete</span>
+                    </button>
+                </div>
             </div>
         </div>
 
