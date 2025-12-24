@@ -117,10 +117,11 @@ const handleView = (id: string) => {
         <!-- Add Button -->
         <button
           @click="openAddModal"
-          class="flex items-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-full shadow-soft transition-colors"
+          class="flex items-center gap-2 px-4 py-2.5 md:px-6 md:py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-full shadow-soft transition-colors text-sm md:text-base"
         >
           <PlusIcon class="w-5 h-5" />
-          Add New Company
+          <span class="hidden sm:inline">Add New Company</span>
+          <span class="sm:hidden">Add</span>
         </button>
       </div>
     </div>
