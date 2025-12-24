@@ -88,7 +88,7 @@ const handleBack = () => {
                     <!-- Back Button -->
                     <button
                     @click="handleBack"
-                    class="flex items-center justify-center gap-2 px-3 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-lg md:rounded-full transition-colors text-sm whitespace-nowrap"
+                    class="hidden sm:flex flex items-center justify-center gap-2 px-3 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-lg md:rounded-full transition-colors text-sm whitespace-nowrap"
                     >
                     <ArrowLeftIcon class="w-4 h-4" />
                     <span class="hidden sm:inline">Back</span>
