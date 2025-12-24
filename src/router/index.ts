@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@/views/auth/LoginView.vue'
 import DashboardView from '@/views/DashboardView.vue'
-// Define routes (تعريف المسارات)
+
 const routes = [
   {
     path: '/',
-    redirect: '/login'  // الصفحة الرئيسية تحول تلقائياً للـ login
+    redirect: '/login'
   },
   {
     path: '/login',
@@ -36,12 +36,31 @@ const routes = [
     path: '/departments/:id',
     name: 'DepartmentDetail',
     component: () => import('@/views/DepartmentDetailView.vue')
+  },
+  {
+    path: '/employees',
+    name: 'Employees',
+    component: () => import('@/views/EmployeesView.vue')
+  },
+  {
+    path: '/employees/create',
+    name: 'EmployeeCreate',
+    component: () => import('@/views/EmployeeFormView.vue')
+  },
+  {
+    path: '/employees/:id',
+    name: 'EmployeeDetail',
+    component: () => import('@/views/EmployeeDetailView.vue')
+  },
+  {
+    path: '/employees/:id/edit',
+    name: 'EmployeeEdit',
+    component: () => import('@/views/EmployeeFormView.vue')
   }
 ]
 
-// Create router instance (إنشاء Router)
 const router = createRouter({
-  history: createWebHistory(),  // استخدام HTML5 History API
+  history: createWebHistory(),
   routes
 })
 
