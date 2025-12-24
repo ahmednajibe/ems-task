@@ -10,25 +10,21 @@ interface Props {
 
 interface Emits {
   (e: 'close'): void
-  (e: 'save', company: Omit<Company, 'id'>): void
+  (e: 'save', companyData: { name: string }): void
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
-// Form data
+// Form data - name only!
 const formData = ref({
-  name: '',
-  departmentCount: 0,
-  employeeCount: 0
+  name: ''
 })
 
 // Reset form
 const resetForm = () => {
   formData.value = {
-    name: '',
-    departmentCount: 0,
-    employeeCount: 0
+    name: ''
   }
 }
 
@@ -36,9 +32,7 @@ const resetForm = () => {
 watch(() => props.company, (company) => {
   if (company) {
     formData.value = {
-      name: company.name,
-      departmentCount: company.departmentCount,
-      employeeCount: company.employeeCount
+      name: company.name
     }
   } else {
     resetForm()
@@ -46,11 +40,11 @@ watch(() => props.company, (company) => {
 }, { immediate: true })
 
 const handleSubmit = () => {
-  if (!formData.value.name) {
+  if (!formData.value.name.trim()) {
     return
   }
   
-  emit('save', formData.value)
+  emit('save', { name: formData.value.name.trim() })
   resetForm()
 }
 
@@ -99,32 +93,23 @@ const handleClose = () => {
             />
           </div>
 
-          <!-- Department Count -->
-          <div>
-            <label class="block text-sm font-medium text-neutral-700 mb-2">
-              Number of Departments
-            </label>
-            <input
-              v-model.number="formData.departmentCount"
-              type="number"
-              min="0"
-              placeholder="e.g. 5"
-              class="w-full px-4 py-2.5 bg-white border border-neutral-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
-            />
+          <!-- Info Message -->
+          <div v-if="!company" class="p-3 bg-neutral-50 rounded-xl border border-neutral-200">
+            <p class="text-xs text-neutral-600">
+              💡 Departments and employees will be counted automatically as you add them.
+            </p>
           </div>
 
-          <!-- Employee Count -->
-          <div>
-            <label class="block text-sm font-medium text-neutral-700 mb-2">
-              Number of Employees
-            </label>
-            <input
-              v-model.number="formData.employeeCount"
-              type="number"
-              min="0"
-              placeholder="e.g. 124"
-              class="w-full px-4 py-2.5 bg-white border border-neutral-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
-            />
+          <!-- Show current counts when editing (read-only) -->
+          <div v-if="company" class="grid grid-cols-2 gap-3">
+            <div class="p-3 bg-neutral-50 rounded-xl border border-neutral-200">
+              <div class="text-xs text-neutral-500">Departments</div>
+              <div class="text-lg font-semibold text-neutral-800">{{ company.departmentCount }}</div>
+            </div>
+            <div class="p-3 bg-neutral-50 rounded-xl border border-neutral-200">
+              <div class="text-xs text-neutral-500">Employees</div>
+              <div class="text-lg font-semibold text-neutral-800">{{ company.employeeCount }}</div>
+            </div>
           </div>
 
           <!-- Actions -->

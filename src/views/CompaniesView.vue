@@ -55,14 +55,18 @@ const closeModal = () => {
   editingCompany.value = null
 }
 
-const handleSave = (companyData: Omit<Company, 'id'>) => {
+const handleSave = (companyData: { name: string }) => {
   if (editingCompany.value) {
-    // Edit existing
-    companiesStore.updateCompany(editingCompany.value.id, companyData)
+    // Edit existing - only update name
+    companiesStore.updateCompany(editingCompany.value.id, { name: companyData.name })
     toastStore.success(`${companyData.name} updated successfully!`)
   } else {
-    // Add new
-    companiesStore.addCompany(companyData)
+    // Add new - counts start at 0
+    companiesStore.addCompany({
+      name: companyData.name,
+      departmentCount: 0,
+      employeeCount: 0
+    })
     toastStore.success(`${companyData.name} added successfully!`)
   }
   closeModal()
