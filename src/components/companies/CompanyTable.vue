@@ -44,86 +44,88 @@ const getInitials = (name: string) => {
 </script>
 
 <template>
-  <div class="bg-card rounded-3xl shadow-premium overflow-hidden">
+  <div class="bg-white shadow-soft rounded-t-xl overflow-hidden">
     <!-- Table Header -->
-    <div class="grid grid-cols-12 gap-4 px-6 py-4 bg-neutral-50 border-b border-neutral-200">
-      <div class="col-span-5 text-xs font-semibold text-neutral-600 uppercase tracking-wider">
+    <div class="grid grid-cols-12 gap-4 px-6 py-4 border-b border-neutral-200">
+      <div class="col-span-5 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
         Company Name
       </div>
-      <div class="col-span-3 text-xs font-semibold text-neutral-600 uppercase tracking-wider">
+      <div class="col-span-3 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
         Departments
       </div>
-      <div class="col-span-2 text-xs font-semibold text-neutral-600 uppercase tracking-wider">
+      <div class="col-span-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
         Employees
       </div>
-      <div class="col-span-2 text-xs font-semibold text-neutral-600 uppercase tracking-wider">
+      <div class="col-span-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
         Actions
       </div>
     </div>
 
     <!-- Table Body -->
-    <div class="divide-y divide-neutral-100">
+    <div class="divide-y divide-neutral-200">
       <div
         v-for="company in companies"
         :key="company.id"
-        class="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-primary-50/30 transition-colors"
+        class="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-neutral-50 transition-colors"
       >
         <!-- Company Name with Avatar -->
         <div class="col-span-5 flex items-center gap-3">
           <div 
             :class="[
-              'w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm',
+              'w-12 h-12 rounded-full flex items-center justify-center font-semibold text-sm',
               getAvatarColor(company.name)
             ]"
           >
             {{ getInitials(company.name) }}
           </div>
-          <div class="font-medium text-neutral-800">{{ company.name }}</div>
+          <div>
+            <div class="font-semibold text-neutral-900">{{ company.name }}</div>
+          </div>
         </div>
 
         <!-- Departments -->
         <div class="col-span-3 flex items-center">
-          <span class="text-neutral-800 font-medium">
+          <span class="text-neutral-700">
             {{ company.departmentCount }}
           </span>
         </div>
 
         <!-- Employees -->
         <div class="col-span-2 flex items-center">
-          <span class="text-neutral-800 font-medium">
+          <span class="text-neutral-700">
             {{ company.employeeCount.toLocaleString() }}
           </span>
         </div>
 
         <!-- Actions -->
-        <div class="col-span-2 flex items-center gap-2">
+        <div class="col-span-2 flex items-center gap-3">
           <button
             @click="emit('view', company.id)"
             class="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
             title="View"
           >
-            <EyeIcon class="w-5 h-5 text-neutral-600" />
+            <EyeIcon class="w-5 h-5 text-neutral-500" />
           </button>
           <button
             @click="emit('edit', company)"
             class="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
             title="Edit"
           >
-            <PencilIcon class="w-5 h-5 text-neutral-600" />
+            <PencilIcon class="w-5 h-5 text-neutral-500" />
           </button>
           <button
             @click="emit('delete', company.id)"
-            class="p-2 hover:bg-red-50 rounded-lg transition-colors"
+            class="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
             title="Delete"
           >
-            <TrashIcon class="w-5 h-5 text-red-600" />
+            <TrashIcon class="w-5 h-5 text-neutral-500" />
           </button>
         </div>
       </div>
 
       <!-- Empty State -->
       <div v-if="companies.length === 0" class="py-12 text-center">
-        <p class="text-neutral-500">No companies found</p>
+        <p class="text-neutral-400">No companies found</p>
       </div>
     </div>
   </div>

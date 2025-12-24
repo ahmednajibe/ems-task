@@ -102,10 +102,10 @@ const handleView = (_id: string) => {
     </div>
 
     <!-- Content -->
-    <div class="p-4 space-y-4">
+    <div class="p-4">
       <!-- Search Bar -->
-      <CompanySearchBar v-model="searchQuery" />
-
+      <CompanySearchBar v-model="searchQuery" class="mb-5" />
+      
       <!-- Table -->
       <CompanyTable
         :companies="companiesStore.paginatedCompanies"
@@ -115,7 +115,8 @@ const handleView = (_id: string) => {
       />
 
       <!-- Pagination -->
-      <div class="flex items-center justify-between px-6 py-4 bg-card rounded-2xl shadow-soft">
+      <!-- Pagination -->
+      <div class="flex items-center justify-between px-6 py-4 bg-white border-t border-neutral-200 rounded-b-2xl shadow-soft -mt-2">
         <p class="text-sm text-neutral-600">{{ paginationText }}</p>
         
         <div class="flex gap-2">
