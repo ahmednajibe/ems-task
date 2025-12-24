@@ -8,9 +8,11 @@ import CompanyTable from '@/components/companies/CompanyTable.vue'
 import CompanyModal from '@/components/companies/CompanyModal.vue'
 import type { Company } from '@/store/companies'
 import { PlusIcon } from '@heroicons/vue/24/outline'
+import { useRouter } from 'vue-router'
 
 const companiesStore = useCompaniesStore()
 const toastStore = useToastStore()
+const router = useRouter()
 
 // Modal state
 const isModalOpen = ref(false)
@@ -71,9 +73,8 @@ const handleDelete = (id: string) => {
   }
 }
 
-const handleView = (_id: string) => {
-  // TODO: Navigate to company detail page
-  toastStore.info('Company detail page - Coming soon!')
+const handleView = (id: string) => {
+  router.push(`/companies/${id}`)
 }
 </script>
 
