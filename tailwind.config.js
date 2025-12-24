@@ -36,11 +36,11 @@ export default {
           200: '#E5E7EB',  // Borders
           300: '#D1D5DB',  // Disabled
           400: '#9CA3AF',  // Placeholder
-          500: '#718096',  // Text light
-          600: '#4A5568',  // Text medium
-          700: '#2D3748',  // Text dark
-          800: '#1A202C',  // Headings
-          900: '#111827',  // Almost black
+          500: '#81998D',  // Text light
+          600: '#336C51',  // Text medium
+          700: '#336C51',  // Text dark
+          800: '#2D5A43 ',  // Headings
+          900: '#2D6348',  // Almost black
         },
         card: '#FFFFFF',
       },
@@ -51,7 +51,7 @@ export default {
       boxShadow: {
         'soft': '0 2px 8px rgba(0, 0, 0, 0.04)',
         'medium': '0 4px 16px rgba(0, 0, 0, 0.06)',
-        'strong': '0 10px 25px rgba(0, 0, 0, 0.0.05)',
+        'strong': '0 10px 25px rgba(0, 0, 0, 0.05)',
       },
     },
   },
