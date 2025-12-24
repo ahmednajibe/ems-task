@@ -6,9 +6,11 @@ import DashboardLayout from '@/components/layout/DashboardLayout.vue'
 import CompanySearchBar from '@/components/companies/CompanySearchBar.vue'
 import CompanyTable from '@/components/companies/CompanyTable.vue'
 import CompanyModal from '@/components/companies/CompanyModal.vue'
+import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 import type { Company } from '@/store/companies'
 import { PlusIcon } from '@heroicons/vue/24/outline'
 import { useRouter } from 'vue-router'
+
 
 const companiesStore = useCompaniesStore()
 const toastStore = useToastStore()
@@ -17,6 +19,9 @@ const router = useRouter()
 // Modal state
 const isModalOpen = ref(false)
 const editingCompany = ref<Company | null>(null)
+// Confirm dialog state
+const isConfirmOpen = ref(false)
+const companyToDelete = ref<Company | null>(null)
 
 // Search
 const searchQuery = computed({
@@ -66,11 +71,24 @@ const handleSave = (companyData: Omit<Company, 'id'>) => {
 const handleDelete = (id: string) => {
   const company = companiesStore.getCompanyById(id)
   if (!company) return
+  
+  companyToDelete.value = company
+  isConfirmOpen.value = true
+}
 
-  if (confirm(`Are you sure you want to delete ${company.name}?`)) {
-    companiesStore.deleteCompany(id)
-    toastStore.info(`${company.name} deleted`)
-  }
+const confirmDelete = () => {
+  if (!companyToDelete.value) return
+  
+  companiesStore.deleteCompany(companyToDelete.value.id)
+  toastStore.info(`${companyToDelete.value.name} deleted`)
+  
+  isConfirmOpen.value = false
+  companyToDelete.value = null
+}
+
+const cancelDelete = () => {
+  isConfirmOpen.value = false
+  companyToDelete.value = null
 }
 
 const handleView = (id: string) => {
@@ -79,6 +97,7 @@ const handleView = (id: string) => {
 </script>
 
 <template>
+
   <DashboardLayout>
     <!-- Page Header -->
     <div class=" px-6 py-4">
@@ -149,12 +168,23 @@ const handleView = (id: string) => {
       </div>
     </div>
 
-    <!-- Modal -->
-    <CompanyModal
-      :is-open="isModalOpen"
-      :company="editingCompany"
-      @close="closeModal"
-      @save="handleSave"
-    />
+      <!-- Modal -->
+      <CompanyModal
+        :is-open="isModalOpen"
+        :company="editingCompany"
+        @close="closeModal"
+        @save="handleSave"
+      />
+      <!-- Confirm Delete Dialog -->
+      <ConfirmDialog
+        :is-open="isConfirmOpen"
+        title="Delete Company"
+        :message="companyToDelete ? `Are you sure you want to delete ${companyToDelete.name}? This action cannot be undone.` : ''"
+        confirm-text="Delete"
+        cancel-text="Cancel"
+        type="danger"
+        @confirm="confirmDelete"
+        @cancel="cancelDelete"
+      />
   </DashboardLayout>
 </template>
