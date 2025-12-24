@@ -9,7 +9,6 @@ import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 import {
   PencilIcon,
   TrashIcon,
-  BuildingOfficeIcon,
   UsersIcon
 } from '@heroicons/vue/24/outline'
 
