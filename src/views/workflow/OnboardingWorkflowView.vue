@@ -195,9 +195,9 @@ const hireEmployeeName = computed(() => {
 
 <template>
   <DashboardLayout>
-    <div class="p-4 space-y-4">
+    <div class="p-4 flex flex-col h-full">
       <!-- Header -->
-      <div class="bg-white shadow-soft rounded-2xl px-6 py-4">
+      <div class="bg-white shadow-soft rounded-2xl px-6 py-4 mb-8">
         <div class="flex items-center justify-between">
           <div>
             <h1 class="text-xl md:text-2xl font-bold text-neutral-800">Employee Onboarding Workflow</h1>
@@ -217,9 +217,9 @@ const hireEmployeeName = computed(() => {
         </div>
       </div>
 
-      <!-- Kanban Board -->
-      <div class="flex items-center justify-center min-h-[500px]">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+      <!-- Kanban Board - Takes remaining space -->
+      <div class="flex-1 flex items-center">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full h-full">
           <StatusColumn
           v-for="status in statuses"
           :key="status"
@@ -231,8 +231,8 @@ const hireEmployeeName = computed(() => {
           @hire="handleHire"
           @reject="handleReject"
         />
+        </div>
       </div>
-    </div>
     </div>
 
     <!-- Confirm Dialog -->
