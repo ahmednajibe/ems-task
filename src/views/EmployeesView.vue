@@ -8,10 +8,13 @@ import EmployeeSearchBar from '@/components/employees/EmployeeSearchBar.vue'
 import EmployeeTable from '@/components/employees/EmployeeTable.vue'
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 import { PlusIcon } from '@heroicons/vue/24/outline'
+import { useAuthStore } from '@/store/auth'
 
 const router = useRouter()
 const employeesStore = useEmployeesStore()
 const toastStore = useToastStore()
+const authStore = useAuthStore()
+
 
 // Confirm dialog
 const isConfirmOpen = ref(false)
@@ -102,6 +105,7 @@ const cancelDelete = () => {
       <!-- Table -->
       <EmployeeTable
         :employees="employeesStore.paginatedEmployees"
+        :user-role="authStore.userRole"
         @view="handleView"
         @edit="handleEdit"
         @delete="handleDelete"

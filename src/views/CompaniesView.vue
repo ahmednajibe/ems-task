@@ -10,11 +10,14 @@ import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 import type { Company } from '@/store/companies'
 import { PlusIcon } from '@heroicons/vue/24/outline'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/store/auth'
+
 
 
 const companiesStore = useCompaniesStore()
 const toastStore = useToastStore()
 const router = useRouter()
+const authStore = useAuthStore()
 
 // Modal state
 const isModalOpen = ref(false)
@@ -116,6 +119,7 @@ const handleView = (id: string) => {
 
         <!-- Add Button -->
         <button
+          v-if="authStore.userRole !== 'employee'"
           @click="openAddModal"
           class="flex items-center gap-2 px-4 py-2.5 md:px-6 md:py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-full shadow-soft transition-colors text-sm md:text-base"
         >
@@ -134,6 +138,7 @@ const handleView = (id: string) => {
       <!-- Table -->
       <CompanyTable
         :companies="companiesStore.paginatedCompanies"
+        :user-role="authStore.userRole"
         @view="handleView"
         @edit="openEditModal"
         @delete="handleDelete"

@@ -8,6 +8,7 @@ import { useToastStore } from '@/store/toast'
 import DashboardLayout from '@/components/layout/DashboardLayout.vue'
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 import type { EmployeeStatus } from '@/store/employees'
+import { useAuthStore } from '@/store/auth'
 import {
   PencilIcon,
   TrashIcon,
@@ -24,6 +25,7 @@ const employeesStore = useEmployeesStore()
 const companiesStore = useCompaniesStore()
 const departmentsStore = useDepartmentsStore()
 const toastStore = useToastStore()
+const authStore = useAuthStore()
 
 const employeeId = computed(() => route.params.id as string)
 const employee = computed(() => employeesStore.getEmployeeById(employeeId.value))
@@ -109,14 +111,16 @@ const handleBack = () => {
 
           <div class="flex flex-col sm:flex-row gap-2 flex-shrink-0">
             <button
+              v-if="authStore.userRole !== 'employee'"
               @click="handleEdit"
-              class="hidden sm:flex items-center justify-center gap-2 px-3 py-2 bg-primary-100 hover:bg-primary-200 text-primary-700 rounded-lg md:rounded-full transition-colors text-sm whitespace-nowrap"
+              class="flex items-center justify-center gap-2 px-3 py-2 bg-primary-100 hover:bg-primary-200 text-primary-700 rounded-lg md:rounded-full transition-colors text-sm whitespace-nowrap"
             >
               <PencilIcon class="w-4 h-4" />
-              <span>Edit</span>
+              <span class="hidden sm:inline">Edit</span>
             </button>
             
             <button
+              v-if="authStore.userRole === 'admin'"
               @click="handleDelete"
               class="flex items-center justify-center gap-2 px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg md:rounded-full transition-colors text-sm whitespace-nowrap"
             >

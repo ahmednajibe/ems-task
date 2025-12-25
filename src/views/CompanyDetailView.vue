@@ -9,6 +9,7 @@ import DashboardLayout from '@/components/layout/DashboardLayout.vue'
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 import DepartmentModal from '@/components/departments/DepartmentModal.vue'
 import type { Department } from '@/store/departments'
+import { useAuthStore } from '@/store/auth'
 import {
   ArrowLeftIcon,
   PencilIcon,
@@ -28,6 +29,7 @@ const companiesStore = useCompaniesStore()
 const departmentsStore = useDepartmentsStore()
 const employeesStore = useEmployeesStore()
 const toastStore = useToastStore()
+const authStore = useAuthStore()
 
 // ==========================================
 // 2. COMPUTED - COMPANY DATA
@@ -222,16 +224,17 @@ const cancelDeleteEmployee = () => {
 
           <div class="flex flex-col sm:flex-row gap-2 flex-shrink-0">
             <!-- Back Button -->
-            <button
+            <!-- <button
               @click="handleBack"
               class="hidden sm:flex items-center justify-center gap-2 px-3 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-lg md:rounded-full transition-colors text-sm whitespace-nowrap"
             >
               <ArrowLeftIcon class="w-4 h-4" />
               <span>Back</span>
-            </button>
+            </button> -->
             
             <!-- Edit Button -->
             <button
+              v-if="authStore.userRole !== 'employee'"
               @click="handleEdit"
               class="flex items-center justify-center gap-2 px-3 py-2 bg-primary-100 hover:bg-primary-200 text-primary-700 rounded-lg md:rounded-full transition-colors text-sm whitespace-nowrap"
             >
@@ -241,6 +244,7 @@ const cancelDeleteEmployee = () => {
             
             <!-- Delete Button -->
             <button
+              v-if="authStore.userRole === 'admin'"
               @click="handleDelete"
               class="flex items-center justify-center gap-2 px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg md:rounded-full transition-colors text-sm whitespace-nowrap"
             >
@@ -302,6 +306,7 @@ const cancelDeleteEmployee = () => {
             📚 Departments ({{ companyDepartments.length }})
           </h2>
           <button
+            v-if="authStore.userRole !== 'employee'"
             @click="openAddDepartmentModal"
             class="flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-full text-sm transition-colors"
           >
@@ -330,6 +335,7 @@ const cancelDeleteEmployee = () => {
                 <EyeIcon class="w-4 h-4 text-neutral-600" />
               </button>
               <button
+                v-if="authStore.userRole !== 'employee'"
                 @click="openEditDepartmentModal(dept)"
                 class="p-2 hover:bg-white rounded-lg transition-colors"
                 title="Edit Department"
@@ -337,6 +343,7 @@ const cancelDeleteEmployee = () => {
                 <PencilIcon class="w-4 h-4 text-neutral-600" />
               </button>
               <button
+                v-if="authStore.userRole === 'admin'"
                 @click="handleDeleteDepartment(dept.id)"
                 class="p-2 hover:bg-white rounded-lg transition-colors"
                 title="Delete Department"
@@ -352,6 +359,7 @@ const cancelDeleteEmployee = () => {
           <BuildingLibraryIcon class="w-12 h-12 text-neutral-400 mx-auto mb-3" />
           <p class="text-neutral-500">No departments yet</p>
           <button
+            v-if="authStore.userRole !== 'employee'"
             @click="openAddDepartmentModal"
             class="mt-3 text-primary-600 hover:text-primary-700 text-sm font-medium"
           >
@@ -367,6 +375,7 @@ const cancelDeleteEmployee = () => {
             👥 Employees ({{ companyEmployees.length }})
           </h2>
           <button
+            v-if="authStore.userRole !== 'employee'"
             @click="handleAddEmployee"
             class="flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-full text-sm transition-colors"
           >
@@ -397,6 +406,7 @@ const cancelDeleteEmployee = () => {
                 <EyeIcon class="w-4 h-4 text-neutral-600" />
               </button>
               <button
+                v-if="authStore.userRole !== 'employee'"
                 @click="handleEditEmployee(employee.id)"
                 class="p-2 hover:bg-white rounded-lg transition-colors"
                 title="Edit Employee"
@@ -404,6 +414,7 @@ const cancelDeleteEmployee = () => {
                 <PencilIcon class="w-4 h-4 text-neutral-600" />
               </button>
               <button
+                v-if="authStore.userRole === 'admin'"
                 @click="handleDeleteEmployee(employee.id)"
                 class="p-2 hover:bg-white rounded-lg transition-colors"
                 title="Delete Employee"

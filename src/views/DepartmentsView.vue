@@ -10,10 +10,12 @@ import DepartmentModal from '@/components/departments/DepartmentModal.vue'
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 import type { Department } from '@/store/departments'
 import { PlusIcon } from '@heroicons/vue/24/outline'
+import { useAuthStore } from '@/store/auth'
 
 const router = useRouter()
 const departmentsStore = useDepartmentsStore()
 const toastStore = useToastStore()
+const authStore = useAuthStore()
 
 // Modal state
 const isModalOpen = ref(false)
@@ -114,6 +116,7 @@ const handleView = (id: string) => {
 
         <!-- Add Button -->
         <button
+          v-if="authStore.userRole !== 'employee'"
           @click="openAddModal"
           class="flex items-center gap-2 px-4 py-2.5 md:px-6 md:py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-full shadow-soft transition-colors text-sm md:text-base"
         >
@@ -132,6 +135,7 @@ const handleView = (id: string) => {
       <!-- Table -->
       <DepartmentTable
         :departments="departmentsStore.paginatedDepartments"
+        :user-role="authStore.userRole"
         @view="handleView"
         @edit="openEditModal"
         @delete="handleDelete"

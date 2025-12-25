@@ -10,6 +10,7 @@ import {
 
 interface Props {
   employees: Employee[]
+  userRole?: string | null
 }
 
 interface Emits {
@@ -152,6 +153,7 @@ const getInitials = (name: string) => {
               <EyeIcon class="w-4 h-4 text-neutral-500" />
             </button>
             <button
+              v-if="userRole !== 'employee'"
               @click="emit('edit', employee.id)"
               class="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
               title="Edit"
@@ -159,6 +161,7 @@ const getInitials = (name: string) => {
               <PencilIcon class="w-4 h-4 text-neutral-500" />
             </button>
             <button
+              v-if="userRole === 'admin'"
               @click="emit('delete', employee.id)"
               class="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
               title="Delete"
@@ -232,6 +235,7 @@ const getInitials = (name: string) => {
             View
           </button>
           <button
+           v-if="userRole !== 'employee'"
             @click="emit('edit', employee.id)"
             class="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-lg transition-colors text-sm"
           >
@@ -239,6 +243,7 @@ const getInitials = (name: string) => {
             Edit
           </button>
           <button
+            v-if="userRole === 'admin'"
             @click="emit('delete', employee.id)"
             class="px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors"
           >
