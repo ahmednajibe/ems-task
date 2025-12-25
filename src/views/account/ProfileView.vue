@@ -165,50 +165,82 @@ const changePassword = () => {
       <div class="bg-white shadow-soft rounded-2xl p-6">
         <!-- Avatar & Role -->
         <div class="flex items-center gap-4 mb-6 pb-6 border-b border-neutral-200">
-          <div class="w-20 h-20 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold text-2xl">
+        <div class="w-20 h-20 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold text-2xl flex-shrink-0">
             {{ avatarInitials }}
-          </div>
-          <div class="flex-1">
-            <h2 class="text-2xl font-bold text-neutral-800">{{ authStore.user?.name }}</h2>
+        </div>
+        <div class="flex-1 min-w-0">
+            <h2 class="text-xl md:text-2xl font-bold text-neutral-800 truncate">{{ authStore.user?.name }}</h2>
             <div class="flex items-center gap-2 mt-1">
-              <span 
+            <span 
                 :class="[
-                  'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium capitalize',
-                  getRoleBadgeColor(authStore.user?.role || '')
+                'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium capitalize',
+                getRoleBadgeColor(authStore.user?.role || '')
                 ]"
-              >
+            >
                 <ShieldCheckIcon class="w-3 h-3" />
                 {{ authStore.user?.role }}
-              </span>
+            </span>
             </div>
-          </div>
-          
-          <!-- Edit/Save Buttons -->
-          <div v-if="!isEditing">
+        </div>
+        
+        <!-- Edit/Save Buttons - Responsive -->
+        <div v-if="!isEditing" class="flex-shrink-0">
+            <!-- Desktop: Full button -->
             <button
-              @click="startEdit"
-              class="flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-full text-sm transition-colors"
+            @click="startEdit"
+            class="hidden md:flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-full text-sm transition-colors"
             >
-              <PencilIcon class="w-4 h-4" />
-              Edit Profile
+            <PencilIcon class="w-4 h-4" />
+            Edit Profile
             </button>
-          </div>
-          <div v-else class="flex gap-2">
+            <!-- Mobile: Icon only -->
             <button
-              @click="saveChanges"
-              class="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-full text-sm transition-colors"
+            @click="startEdit"
+            class="flex md:hidden items-center justify-center w-10 h-10 bg-primary-500 hover:bg-primary-600 text-white rounded-full transition-colors"
+            title="Edit Profile"
             >
-              <CheckIcon class="w-4 h-4" />
-              Save
+            <PencilIcon class="w-5 h-5" />
+            </button>
+        </div>
+        
+        <!-- Save/Cancel - Responsive -->
+        <div v-else class="flex gap-2 flex-shrink-0">
+            <!-- Desktop: Side by side -->
+            <div class="hidden md:flex gap-2">
+            <button
+                @click="saveChanges"
+                class="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-full text-sm transition-colors"
+            >
+                <CheckIcon class="w-4 h-4" />
+                Save
             </button>
             <button
-              @click="cancelEdit"
-              class="flex items-center gap-2 px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-full text-sm transition-colors"
+                @click="cancelEdit"
+                class="flex items-center gap-2 px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-full text-sm transition-colors"
             >
-              <XMarkIcon class="w-4 h-4" />
-              Cancel
+                <XMarkIcon class="w-4 h-4" />
+                Cancel
             </button>
-          </div>
+            </div>
+            
+            <!-- Mobile: Icons only -->
+            <div class="flex md:hidden gap-2">
+            <button
+                @click="saveChanges"
+                class="flex items-center justify-center w-10 h-10 bg-green-500 hover:bg-green-600 text-white rounded-full transition-colors"
+                title="Save"
+            >
+                <CheckIcon class="w-5 h-5" />
+            </button>
+            <button
+                @click="cancelEdit"
+                class="flex items-center justify-center w-10 h-10 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-full transition-colors"
+                title="Cancel"
+            >
+                <XMarkIcon class="w-5 h-5" />
+            </button>
+            </div>
+        </div>
         </div>
 
         <!-- Profile Info -->
