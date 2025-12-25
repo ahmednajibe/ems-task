@@ -10,6 +10,7 @@ import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 import DepartmentModal from '@/components/departments/DepartmentModal.vue'
 import type { Department } from '@/store/departments'
 import { useAuthStore } from '@/store/auth'
+import { generateEmployeePDF } from '@/utils/employeePdfReport'
 import {
   // ArrowLeftIcon,
   PencilIcon,
@@ -17,7 +18,8 @@ import {
   BuildingLibraryIcon,
   UsersIcon,
   PlusIcon,
-  EyeIcon
+  EyeIcon,
+  DocumentArrowDownIcon 
 } from '@heroicons/vue/24/outline'
 
 // ==========================================
@@ -194,6 +196,31 @@ const cancelDeleteEmployee = () => {
   isEmployeeDeleteOpen.value = false
   employeeToDelete.value = null
 }
+
+const generateReport = () => {
+  if (!company.value) return
+  
+  const reportData = companyEmployees.value.map(emp => ({
+    name: emp.name,
+    email: emp.email,
+    mobile: emp.mobile || '',
+    designation: emp.designation || '',
+    companyName: company.value!.name,
+    departmentName: departmentsStore.getDepartmentById(emp.departmentId)?.name || 'Unknown',
+    hiredOn: emp.hiredOn || '',
+    daysEmployed: employeesStore.getDaysEmployed(emp),
+    status: emp.status
+  }))
+  
+  const doc = generateEmployeePDF(
+    reportData,
+    `${company.value.name} - Employees Report`,
+    `Hired employees in ${company.value.name}`
+  )
+  
+  doc.save(`${company.value.name}-employees-${new Date().toISOString().split('T')[0]}.pdf`)
+  toastStore.success('Report generated successfully!')
+}
 </script>
 
 <template>
@@ -223,16 +250,13 @@ const cancelDeleteEmployee = () => {
           </div>
 
           <div class="flex flex-col sm:flex-row gap-2 flex-shrink-0">
-            <!-- Back Button -->
-            <!-- <button
-              @click="handleBack"
-              class="hidden sm:flex items-center justify-center gap-2 px-3 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-lg md:rounded-full transition-colors text-sm whitespace-nowrap"
+            <button
+              @click="generateReport"
+              class="flex items-center justify-center gap-2 px-3 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg md:rounded-full transition-colors text-sm whitespace-nowrap"
             >
-              <ArrowLeftIcon class="w-4 h-4" />
-              <span>Back</span>
-            </button> -->
-            
-            <!-- Edit Button -->
+              <DocumentArrowDownIcon class="w-4 h-4" />
+              <span class="hidden sm:inline">Report</span>
+            </button>
             <button
               v-if="authStore.userRole !== 'employee'"
               @click="handleEdit"

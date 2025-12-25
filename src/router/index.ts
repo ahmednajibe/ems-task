@@ -56,6 +56,16 @@ const routes = [
     path: '/employees/:id/edit',
     name: 'EmployeeEdit',
     component: () => import('@/views/EmployeeFormView.vue')
+  },
+  {
+    path: '/reports/employees',
+    name: 'EmployeesReport',
+    component: () => import('@/views/reports/EmployeesReportView.vue')
+  },
+  {
+    path: '/account/profile',
+    name: 'Profile',
+    component: () => import('@/views/account/ProfileView.vue')
   }
 ]
 

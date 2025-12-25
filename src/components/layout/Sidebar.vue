@@ -2,16 +2,17 @@
 // import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/store/auth'
+import { useToastStore } from '@/store/toast'
 import { 
   Squares2X2Icon,
   BuildingOfficeIcon,
   BuildingLibraryIcon,
   UsersIcon,
-  Cog6ToothIcon,
+  UserCircleIcon,
   ArrowLeftEndOnRectangleIcon,  
-  SparklesIcon  
+  SparklesIcon,
+  DocumentChartBarIcon    
 } from '@heroicons/vue/24/outline'
-import { useToastStore } from '@/store/toast'
 
 const route = useRoute()
 const router = useRouter()
@@ -24,7 +25,8 @@ const navItems = [
   { path: '/companies', label: 'Company Mgmt', icon: BuildingOfficeIcon },
   { path: '/departments', label: 'Department Mgmt', icon: BuildingLibraryIcon },
   { path: '/employees', label: 'Employee Mgmt', icon: UsersIcon },
-  { path: '/settings', label: 'Settings', icon: Cog6ToothIcon },
+  { path: '/reports/employees', label: 'Employee Report', icon: DocumentChartBarIcon },
+  { path: '/account/profile', label: 'My Account', icon: UserCircleIcon },
 ]
 
 // Check if route is active
