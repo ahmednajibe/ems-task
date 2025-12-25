@@ -25,8 +25,8 @@ const formData = ref({
   mobile: '',
   address: '',
   designation: '',
-  companyId: '',
-  departmentId: '',
+  companyId: route.query.companyId as string || '',
+  departmentId: route.query.departmentId as string || '',
   status: 'Application Received' as EmployeeStatus,
   hiredOn: ''
 })
@@ -227,6 +227,7 @@ const handleCancel = () => {
               <select
                 v-model="formData.companyId"
                 required
+                :disabled="!!route.query.companyId"
                 class="w-full px-4 py-2.5 bg-white border border-neutral-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
               >
                 <option value="">Select a company...</option>
@@ -248,7 +249,7 @@ const handleCancel = () => {
               <select
                 v-model="formData.departmentId"
                 required
-                :disabled="!formData.companyId"
+                :disabled="!formData.companyId || !!route.query.departmentId"
                 class="w-full px-4 py-2.5 bg-white border border-neutral-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all disabled:bg-neutral-50 disabled:cursor-not-allowed"
               >
                 <option value="">{{ formData.companyId ? 'Select a department...' : 'Select company first' }}</option>

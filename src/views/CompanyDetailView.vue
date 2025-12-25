@@ -456,6 +456,7 @@ const cancelDeleteEmployee = () => {
       v-if="company"
       :is-open="isDepartmentModalOpen"
       :department="editingDepartment"
+      :preselected-company-id="company.id"
       @close="closeDepartmentModal"
       @save="handleSaveDepartment"
     />

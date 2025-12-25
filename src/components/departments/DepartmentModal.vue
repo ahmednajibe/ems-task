@@ -7,6 +7,7 @@ import { XMarkIcon } from '@heroicons/vue/24/outline'
 interface Props {
   isOpen: boolean
   department?: Department | null
+  preselectedCompanyId?: string
 }
 
 interface Emits {
@@ -41,7 +42,10 @@ watch(() => props.department, (department) => {
       companyId: department.companyId
     }
   } else {
-    resetForm()
+    formData.value = {
+      name: '',
+      companyId: props.preselectedCompanyId || ''
+    }
   }
 }, { immediate: true })
 
@@ -94,7 +98,8 @@ const handleClose = () => {
             <select
               v-model="formData.companyId"
               required
-              class="w-full px-4 py-2.5 bg-white border border-neutral-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
+              :disabled="!!preselectedCompanyId"
+              class="w-full px-4 py-2.5 bg-white border border-neutral-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all disabled:bg-neutral-50 disabled:cursor-not-allowed"
             >
               <option value="">Select a company...</option>
               <option

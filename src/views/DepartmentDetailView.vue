@@ -3,21 +3,31 @@ import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useDepartmentsStore } from '@/store/departments'
 import { useCompaniesStore } from '@/store/companies'
+import { useEmployeesStore } from '@/store/employees'
 import { useToastStore } from '@/store/toast'
 import DashboardLayout from '@/components/layout/DashboardLayout.vue'
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 import {
   PencilIcon,
   TrashIcon,
-  UsersIcon
+  UsersIcon,
+  PlusIcon,
+  EyeIcon
 } from '@heroicons/vue/24/outline'
 
+// ==========================================
+// 1. STORES & ROUTER
+// ==========================================
 const route = useRoute()
 const router = useRouter()
 const departmentsStore = useDepartmentsStore()
 const companiesStore = useCompaniesStore()
+const employeesStore = useEmployeesStore()
 const toastStore = useToastStore()
 
+// ==========================================
+// 2. COMPUTED - DEPARTMENT DATA
+// ==========================================
 const departmentId = computed(() => route.params.id as string)
 const department = computed(() => departmentsStore.getDepartmentById(departmentId.value))
 const company = computed(() => 
@@ -30,10 +40,26 @@ if (!department.value) {
   router.push('/departments')
 }
 
-const isConfirmOpen = ref(false)
+// ==========================================
+// 3. COMPUTED - FILTERED DATA
+// ==========================================
+const departmentEmployees = computed(() => {
+  if (!department.value) return []
+  return employeesStore.getEmployeesByDepartment(department.value.id)
+})
 
+// ==========================================
+// 4. REACTIVE STATE
+// ==========================================
+const isConfirmOpen = ref(false)
+const isEmployeeDeleteOpen = ref(false)
+const employeeToDelete = ref<any>(null)
+
+// ==========================================
+// 5. DEPARTMENT ACTIONS
+// ==========================================
 const handleEdit = () => {
-  toastStore.info('Edit functionality - Coming soon!')
+  toastStore.info('Edit department name - Coming soon!')
 }
 
 const handleDelete = () => {
@@ -54,6 +80,45 @@ const cancelDelete = () => {
 
 const handleBack = () => {
   router.push('/departments')
+}
+
+// ==========================================
+// 6. EMPLOYEE ACTIONS
+// ==========================================
+const handleAddEmployee = () => {
+  if (!department.value || !company.value) return
+  router.push(`/employees/create?companyId=${company.value.id}&departmentId=${department.value.id}`)
+}
+
+const handleViewEmployee = (id: string) => {
+  router.push(`/employees/${id}`)
+}
+
+const handleEditEmployee = (id: string) => {
+  router.push(`/employees/${id}/edit`)
+}
+
+const handleDeleteEmployee = (id: string) => {
+  const employee = employeesStore.getEmployeeById(id)
+  if (!employee) return
+  
+  employeeToDelete.value = employee
+  isEmployeeDeleteOpen.value = true
+}
+
+const confirmDeleteEmployee = () => {
+  if (!employeeToDelete.value) return
+  
+  employeesStore.deleteEmployee(employeeToDelete.value.id)
+  toastStore.success(`${employeeToDelete.value.name} deleted successfully`)
+  
+  isEmployeeDeleteOpen.value = false
+  employeeToDelete.value = null
+}
+
+const cancelDeleteEmployee = () => {
+  isEmployeeDeleteOpen.value = false
+  employeeToDelete.value = null
 }
 </script>
 
@@ -90,7 +155,7 @@ const handleBack = () => {
               class="hidden sm:flex items-center justify-center gap-2 px-3 py-2 bg-primary-100 hover:bg-primary-200 text-primary-700 rounded-lg md:rounded-full transition-colors text-sm whitespace-nowrap"
             >
               <PencilIcon class="w-4 h-4" />
-              <span class="hidden sm:inline">Edit</span>
+              <span>Edit</span>
             </button>
             
             <!-- Delete Button -->
@@ -113,7 +178,7 @@ const handleBack = () => {
           </div>
           <div>
             <div class="text-sm text-neutral-600">Total Employees</div>
-            <div class="text-3xl font-bold text-neutral-800">{{ department.employeeCount }}</div>
+            <div class="text-3xl font-bold text-neutral-800">{{ departmentEmployees.length }}</div>
           </div>
         </div>
       </div>
@@ -135,21 +200,75 @@ const handleBack = () => {
         </div>
       </div>
 
-      <!-- Employees Placeholder -->
+      <!-- Employees Section -->
       <div class="bg-white shadow-soft rounded-2xl p-6">
-        <h2 class="text-lg font-semibold text-neutral-800 mb-4">
-          👥 Employees ({{ department.employeeCount }})
-        </h2>
-        <div class="text-center py-12 bg-neutral-50 rounded-xl border-2 border-dashed border-neutral-200">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-neutral-800">
+            👥 Employees ({{ departmentEmployees.length }})
+          </h2>
+          <button
+            @click="handleAddEmployee"
+            class="flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-full text-sm transition-colors"
+          >
+            <PlusIcon class="w-4 h-4" />
+            Add Employee
+          </button>
+        </div>
+
+        <!-- Employees List -->
+        <div v-if="departmentEmployees.length > 0" class="space-y-2">
+          <div
+            v-for="employee in departmentEmployees"
+            :key="employee.id"
+            class="flex items-center justify-between p-4 bg-neutral-50 rounded-xl hover:bg-neutral-100 transition-colors"
+          >
+            <div class="flex-1 min-w-0">
+              <div class="font-semibold text-neutral-800 truncate">{{ employee.name }}</div>
+              <div class="text-sm text-neutral-500 truncate">
+                {{ employee.designation || 'No position' }} • {{ employee.email }}
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                @click="handleViewEmployee(employee.id)"
+                class="p-2 hover:bg-white rounded-lg transition-colors"
+                title="View Employee"
+              >
+                <EyeIcon class="w-4 h-4 text-neutral-600" />
+              </button>
+              <button
+                @click="handleEditEmployee(employee.id)"
+                class="p-2 hover:bg-white rounded-lg transition-colors"
+                title="Edit Employee"
+              >
+                <PencilIcon class="w-4 h-4 text-neutral-600" />
+              </button>
+              <button
+                @click="handleDeleteEmployee(employee.id)"
+                class="p-2 hover:bg-white rounded-lg transition-colors"
+                title="Delete Employee"
+              >
+                <TrashIcon class="w-4 h-4 text-red-600" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else class="text-center py-12 bg-neutral-50 rounded-xl">
           <UsersIcon class="w-12 h-12 text-neutral-400 mx-auto mb-3" />
-          <p class="text-neutral-500">Employees will be displayed here once added</p>
-          <p class="text-sm text-neutral-400 mt-1">Future feature - Coming with backend integration</p>
+          <p class="text-neutral-500">No employees in this department yet</p>
+          <button
+            @click="handleAddEmployee"
+            class="mt-3 text-primary-600 hover:text-primary-700 text-sm font-medium"
+          >
+            Add your first employee
+          </button>
         </div>
       </div>
-
     </div>
 
-    <!-- Confirm Dialog -->
+    <!-- Modals & Dialogs -->
     <ConfirmDialog
       v-if="department"
       :is-open="isConfirmOpen"
@@ -160,6 +279,17 @@ const handleBack = () => {
       type="danger"
       @confirm="confirmDelete"
       @cancel="cancelDelete"
+    />
+
+    <ConfirmDialog
+      :is-open="isEmployeeDeleteOpen"
+      title="Delete Employee"
+      :message="employeeToDelete ? `Are you sure you want to delete ${employeeToDelete.name}? This action cannot be undone.` : ''"
+      confirm-text="Delete"
+      cancel-text="Cancel"
+      type="danger"
+      @confirm="confirmDeleteEmployee"
+      @cancel="cancelDeleteEmployee"
     />
   </DashboardLayout>
 </template>
