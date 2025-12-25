@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// import { computed } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/store/auth'
 import { useToastStore } from '@/store/toast'
@@ -20,16 +20,24 @@ const router = useRouter()
 const authStore = useAuthStore()
 const toastStore = useToastStore()
 
-// Navigation items
-const navItems = [
+// Navigation items (all items)
+const allNavItems = [
   { path: '/dashboard', label: 'Dashboard', icon: Squares2X2Icon },
   { path: '/companies', label: 'Company Mgmt', icon: BuildingOfficeIcon },
   { path: '/departments', label: 'Department Mgmt', icon: BuildingLibraryIcon },
   { path: '/employees', label: 'Employee Mgmt', icon: UsersIcon },
-  { path: '/workflow/onboarding', label: 'Onboarding Workflow', icon: ClipboardDocumentListIcon },
+  { path: '/workflow/onboarding', label: 'Onboarding Workflow', icon: ClipboardDocumentListIcon, adminOnly: true },
   { path: '/reports/employees', label: 'Employee Report', icon: DocumentChartBarIcon },
   { path: '/account/profile', label: 'My Account', icon: UserCircleIcon },
 ]
+
+// Filter nav items based on role
+const navItems = computed(() => {
+  if (authStore.userRole === 'employee') {
+    return allNavItems.filter(item => !item.adminOnly)
+  }
+  return allNavItems
+})
 
 // Check if route is active
 const isActive = (path: string) => {
