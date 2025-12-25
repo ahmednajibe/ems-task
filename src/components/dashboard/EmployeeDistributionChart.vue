@@ -11,7 +11,8 @@ import {
   Legend,
   type ChartOptions
 } from 'chart.js'
-import { useDashboardStore } from '@/store/dashboard'
+import { useDepartmentsStore } from '@/store/departments'
+import { useEmployeesStore } from '@/store/employees'
 
 ChartJS.register(
   CategoryScale,
@@ -22,17 +23,26 @@ ChartJS.register(
   Legend
 )
 
-const dashboardStore = useDashboardStore()
+const departmentsStore = useDepartmentsStore()
+const employeesStore = useEmployeesStore()
+
+// Calculate employee count per department
+const departmentDistribution = computed(() => {
+  return departmentsStore.departments.map(dept => ({
+    name: dept.name,
+    count: employeesStore.employees.filter(emp => emp.departmentId === dept.id).length
+  }))
+})
 
 // Get max value for track effect
 const maxValue = computed(() => {
-  const values = dashboardStore.departmentDistribution.map(d => d.count)
-  return Math.max(...values) * 1.2
+  const values = departmentDistribution.value.map(d => d.count)
+  return values.length > 0 ? Math.max(...values) * 1.2 : 100
 })
 
 const chartData = computed(() => {
-  const labels = dashboardStore.departmentDistribution.map(d => d.name)
-  const data = dashboardStore.departmentDistribution.map(d => d.count)
+  const labels = departmentDistribution.value.map(d => d.name)
+  const data = departmentDistribution.value.map(d => d.count)
 
   return {
     labels,

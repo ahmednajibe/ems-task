@@ -104,72 +104,73 @@ const handleView = (id: string) => {
 
 <template>
   <DashboardLayout>
-    <!-- Header -->
-    <div class="px-6 py-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <h1 class="text-2xl font-bold text-neutral-800">Departments</h1>
-          <p class="text-sm text-neutral-600 mt-1">
-            Manage organizational departments and their structure.
-          </p>
+    <div class="p-4 space-y-4">
+      <!-- Header -->
+      <div class="bg-white shadow-soft rounded-2xl px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-xl md:text-2xl font-bold text-neutral-800">Departments</h1>
+            <p class="text-xs md:text-sm text-neutral-600 mt-1">
+              Manage organizational departments and their structure
+            </p>
+          </div>
+
+          <!-- Add Button -->
+          <button
+            v-if="authStore.userRole !== 'employee'"
+            @click="openAddModal"
+            class="flex items-center justify-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-full shadow-soft transition-colors text-sm md:text-base min-w-[44px]"
+          >
+            <PlusIcon class="w-5 h-5" />
+            <span class="hidden md:inline">Add New Department</span>
+          </button>
         </div>
-
-        <!-- Add Button -->
-        <button
-          v-if="authStore.userRole !== 'employee'"
-          @click="openAddModal"
-          class="flex items-center gap-2 px-4 py-2.5 md:px-6 md:py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-full shadow-soft transition-colors text-sm md:text-base"
-        >
-          <PlusIcon class="w-5 h-5" />
-          <span class="hidden sm:inline">Add New Department</span>
-          <span class="sm:hidden">Add</span>
-        </button>
       </div>
-    </div>
 
-    <!-- Content -->
-    <div class="p-4">
-      <!-- Search -->
-      <DepartmentSearchBar v-model="searchQuery" class="mb-4" />
+      <!-- Content -->
+      <div>
+        <!-- Search -->
+        <DepartmentSearchBar v-model="searchQuery" class="mb-4" />
 
-      <!-- Table -->
-      <DepartmentTable
-        :departments="departmentsStore.paginatedDepartments"
-        :user-role="authStore.userRole"
-        @view="handleView"
-        @edit="openEditModal"
-        @delete="handleDelete"
-      />
+        <!-- Table -->
+        <DepartmentTable
+          :departments="departmentsStore.paginatedDepartments"
+          :user-role="authStore.userRole"
+          @view="handleView"
+          @edit="openEditModal"
+          @delete="handleDelete"
+        />
 
-      <!-- Pagination -->
-      <div class="flex items-center justify-between px-6 py-4 bg-white border-t border-neutral-200 rounded-b-2xl shadow-soft">
-        <p class="text-sm text-neutral-600">{{ paginationText }}</p>
-        
-        <div class="flex gap-2">
-          <button
-            @click="departmentsStore.previousPage()"
-            :disabled="departmentsStore.currentPage === 1"
-            :class="[
-              'px-4 py-2 rounded-lg font-medium transition-colors',
-              departmentsStore.currentPage === 1
-                ? 'bg-neutral-100 text-neutral-400 cursor-not-allowed'
-                : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700'
-            ]"
-          >
-            Previous
-          </button>
-          <button
-            @click="departmentsStore.nextPage()"
-            :disabled="departmentsStore.currentPage >= departmentsStore.totalPages"
-            :class="[
-              'px-4 py-2 rounded-lg font-medium transition-colors',
-              departmentsStore.currentPage >= departmentsStore.totalPages
-                ? 'bg-neutral-100 text-neutral-400 cursor-not-allowed'
-                : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700'
-            ]"
-          >
-            Next
-          </button>
+        <!-- Pagination -->
+        <div class="flex items-center justify-between px-6 py-4 bg-white border-t border-neutral-200 rounded-b-2xl shadow-soft">
+          <p class="text-sm text-neutral-600">{{ paginationText }}</p>
+          
+          <div class="flex gap-2">
+            <button
+              @click="departmentsStore.previousPage()"
+              :disabled="departmentsStore.currentPage === 1"
+              :class="[
+                'px-4 py-2 rounded-lg font-medium transition-colors',
+                departmentsStore.currentPage === 1
+                  ? 'bg-neutral-100 text-neutral-400 cursor-not-allowed'
+                  : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700'
+              ]"
+            >
+              Previous
+            </button>
+            <button
+              @click="departmentsStore.nextPage()"
+              :disabled="departmentsStore.currentPage >= departmentsStore.totalPages"
+              :class="[
+                'px-4 py-2 rounded-lg font-medium transition-colors',
+                departmentsStore.currentPage >= departmentsStore.totalPages
+                  ? 'bg-neutral-100 text-neutral-400 cursor-not-allowed'
+                  : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700'
+              ]"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </div>

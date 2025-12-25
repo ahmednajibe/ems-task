@@ -106,34 +106,33 @@ const handleView = (id: string) => {
 <template>
 
   <DashboardLayout>
-    <!-- Page Header -->
-    <div class=" px-6 py-4">
-      <div class="flex items-center justify-between">
-        <div>  
-          <!-- Title & Subtitle -->
-          <h1 class="text-2xl font-bold text-neutral-800">Companies</h1>
-          <p class="text-sm text-neutral-600 mt-1">
-            Manage your organization's legal entities and subsidiaries.
-          </p>
+    <div class="p-4 space-y-4">
+      <!-- Page Header -->
+      <div class="bg-white shadow-soft rounded-2xl px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-xl md:text-2xl font-bold text-neutral-800">Companies</h1>
+            <p class="text-xs md:text-sm text-neutral-600 mt-1">
+              Manage your organization's legal entities and subsidiaries
+            </p>
+          </div>
+
+          <!-- Add Button -->
+          <button
+            v-if="authStore.userRole !== 'employee'"
+            @click="openAddModal"
+            class="flex items-center justify-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-full shadow-soft transition-colors text-sm md:text-base min-w-[44px]"
+          >
+            <PlusIcon class="w-5 h-5" />
+            <span class="hidden md:inline">Add New Company</span>
+          </button>
         </div>
-
-        <!-- Add Button -->
-        <button
-          v-if="authStore.userRole !== 'employee'"
-          @click="openAddModal"
-          class="flex items-center gap-2 px-4 py-2.5 md:px-6 md:py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-full shadow-soft transition-colors text-sm md:text-base"
-        >
-          <PlusIcon class="w-5 h-5" />
-          <span class="hidden sm:inline">Add New Company</span>
-          <span class="sm:hidden">Add</span>
-        </button>
       </div>
-    </div>
 
-    <!-- Content -->
-    <div class="p-4">
-      <!-- Search Bar -->
-      <CompanySearchBar v-model="searchQuery" class="mb-5" />
+      <!-- Content -->
+      <div>
+        <!-- Search Bar -->
+        <CompanySearchBar v-model="searchQuery" class="mb-5" />
       
       <!-- Table -->
       <CompanyTable
@@ -176,9 +175,10 @@ const handleView = (id: string) => {
           </button>
         </div>
       </div>
+      </div>
     </div>
 
-      <!-- Modal -->
+    <!-- Modal -->
       <CompanyModal
         :is-open="isModalOpen"
         :company="editingCompany"
