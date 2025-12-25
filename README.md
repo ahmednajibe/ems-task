@@ -1,5 +1,51 @@
-# Vue 3 + TypeScript + Vite
+# Employee Management System
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Full-stack employee management with Vue.js frontend and Frappe backend.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## 📁 Project Structure
+
+```
+ems-task/
+├── frontend/          # Vue 3 + TypeScript + Tailwind
+├── backend/           # Frappe App (Python)
+└── README.md
+```
+
+## 🚀 Quick Start
+
+### Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Runs on: http://localhost:5173
+
+### Backend Setup
+
+```bash
+# See backend/SETUP.md for Frappe installation
+```
+
+Runs on: http://localhost:8000
+
+## ✨ Features
+
+- ✅ Company & Department Management
+- ✅ Employee CRUD Operations
+- ✅ Onboarding Workflow (Kanban)
+- ✅ Role-Based Access Control
+- ✅ CSV & PDF Reports
+- ✅ Modern UI Design
+
+## 🛠️ Tech Stack
+
+**Frontend:**
+
+- Vue 3, TypeScript, Tailwind CSS, Pinia
+
+**Backend:**
+
+- Frappe Framework, Python, MariaDB
