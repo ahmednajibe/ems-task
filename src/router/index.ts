@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@/views/auth/LoginView.vue'
 import DashboardView from '@/views/DashboardView.vue'
-
+import { useAuthStore } from '@/store/auth'
 const routes = [
   {
     path: '/',
@@ -62,6 +62,26 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+// Route Guard
+router.beforeEach((to, _from, next) => {
+  const authStore = useAuthStore()
+  
+  // Public routes
+  const publicRoutes = ['/login']
+  const requiresAuth = !publicRoutes.includes(to.path)
+  
+  if (requiresAuth && !authStore.isAuthenticated) {
+    // Not logged in, redirect to login
+    next('/login')
+  } else if (to.path === '/login' && authStore.isAuthenticated) {
+    // Already logged in, redirect to dashboard
+    next('/dashboard')
+  } else {
+    // Proceed
+    next()
+  }
 })
 
 export default router

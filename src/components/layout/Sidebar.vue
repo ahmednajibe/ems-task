@@ -79,9 +79,26 @@ const handleLogout = () => {
         @click="handleLogout"
         class="flex items-center gap-3 px-4 py-3 rounded-xl w-full text-neutral-600 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
       >
-        <ArrowLeftEndOnRectangleIcon   class="w-5 h-5" />
+        <ArrowLeftEndOnRectangleIcon class="w-5 h-5" />
         <span class="text-sm font-medium">Logout</span>
       </button>
+    </div>
+
+    <!-- User Info -->
+    <div class="p-4 border-t border-neutral-200">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-semibold text-sm">
+          {{ authStore.user?.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) }}
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="text-sm font-semibold text-neutral-800 truncate">
+            {{ authStore.user?.name }}
+          </div>
+          <div class="text-xs text-neutral-500 capitalize">
+            {{ authStore.user?.role }}
+          </div>
+        </div>
+      </div>
     </div>
   </aside>
 </template>
