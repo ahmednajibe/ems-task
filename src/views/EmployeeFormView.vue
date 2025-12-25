@@ -266,10 +266,10 @@ const handleCancel = () => {
         </div>
 
         <!-- Employment Status -->
-        <div>
+        <div v-if="isEditMode">
           <h2 class="text-lg font-semibold text-neutral-800 mb-4">Employment Status</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Status -->
+            <!-- Status (Edit mode only) -->
             <div>
               <label class="block text-sm font-medium text-neutral-700 mb-2">
                 Status *
@@ -297,6 +297,17 @@ const handleCancel = () => {
                 required
                 class="w-full px-4 py-2.5 bg-white border border-neutral-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
               />
+            </div>
+          </div>
+        </div>
+
+        <!-- Info Note for New Employees -->
+        <div v-else class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div class="flex gap-3">
+            <div class="text-blue-600 text-sm">ℹ️</div>
+            <div class="text-sm text-blue-800">
+              <strong>Initial Status:</strong> New employees will be automatically assigned "Application Received" status.
+              You can update the status later through the Workflow page.
             </div>
           </div>
         </div>

@@ -11,7 +11,8 @@ import {
   UserCircleIcon,
   ArrowLeftEndOnRectangleIcon,  
   SparklesIcon,
-  DocumentChartBarIcon    
+  DocumentChartBarIcon,
+  ClipboardDocumentListIcon
 } from '@heroicons/vue/24/outline'
 
 const route = useRoute()
@@ -25,6 +26,7 @@ const navItems = [
   { path: '/companies', label: 'Company Mgmt', icon: BuildingOfficeIcon },
   { path: '/departments', label: 'Department Mgmt', icon: BuildingLibraryIcon },
   { path: '/employees', label: 'Employee Mgmt', icon: UsersIcon },
+  { path: '/workflow/onboarding', label: 'Onboarding Workflow', icon: ClipboardDocumentListIcon },
   { path: '/reports/employees', label: 'Employee Report', icon: DocumentChartBarIcon },
   { path: '/account/profile', label: 'My Account', icon: UserCircleIcon },
 ]

@@ -63,6 +63,11 @@ const routes = [
     component: () => import('@/views/reports/EmployeesReportView.vue')
   },
   {
+    path: '/workflow/onboarding',
+    name: 'OnboardingWorkflow',
+    component: () => import('@/views/workflow/OnboardingWorkflowView.vue')
+  },
+  {
     path: '/account/profile',
     name: 'Profile',
     component: () => import('@/views/account/ProfileView.vue')
