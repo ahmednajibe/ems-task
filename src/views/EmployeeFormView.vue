@@ -182,7 +182,10 @@ const handleCancel = () => {
               <input
                 v-model="formData.mobile"
                 type="tel"
+                pattern="[0-9+\-\s]*"
+                inputmode="numeric"
                 placeholder="e.g. +1234567890"
+                @input="formData.mobile = formData.mobile.replace(/[^0-9+\-\s]/g, '')"
                 class="w-full px-4 py-2.5 bg-white border border-neutral-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
               />
             </div>

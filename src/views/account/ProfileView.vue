@@ -209,7 +209,7 @@ const changePassword = () => {
             <div class="hidden md:flex gap-2">
             <button
                 @click="saveChanges"
-                class="flex items-center gap-2 px-4 py-2 bg-accent-500 hover:bg-accent-600 text-white rounded-full text-sm transition-colors"
+                class="flex items-center gap-2 px-4 py-2 bg-green-100 hover:bg-green-200 text-neutral-800 rounded-full text-sm transition-colors"
             >
                 <CheckIcon class="w-4 h-4" />
                 Save
@@ -227,7 +227,7 @@ const changePassword = () => {
             <div class="flex md:hidden gap-2">
             <button
                 @click="saveChanges"
-                class="flex items-center justify-center w-10 h-10 bg-accent-500 hover:bg-accent-600 text-white rounded-full transition-colors"
+                class="flex items-center justify-center w-10 h-10 bg-green-100 hover:bg-green-200 text-neutral-800 rounded-full transition-colors"
                 title="Save"
             >
                 <CheckIcon class="w-5 h-5" />
