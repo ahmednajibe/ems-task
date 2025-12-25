@@ -12,7 +12,7 @@ export default {
           50: '#F0F9F4',   // Lightest green tint
           100: '#E6F7ED',  // Light green backgrounds
           200: '#C8EDD6',  // Subtle highlights
-          300: '#9FE2BA',  // Medium light
+          300: '#e8f0e9',  // Medium light #e8f0e9
           400: '#65C466',  // Active states, medium green
           500: '#2D5A43',  // PRIMARY - Buttons, dark green
           600: '#325A4B',  // Hover dark

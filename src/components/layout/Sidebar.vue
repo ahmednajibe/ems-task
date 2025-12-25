@@ -45,7 +45,7 @@ const handleLogout = () => {
 </script>
 
 <template>
-  <aside class="flex w-64 bg-card h-[calc(100vh-2rem)] flex-col m-4 rounded-3xl shadow-premium">
+  <aside class="flex w-64 bg-card h-[calc(100vh-rem)] flex-col m-4 rounded-3xl shadow-premium">
     <!-- Logo Section -->
     <div class="p-6">
       <div class="flex items-center gap-3">

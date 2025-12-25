@@ -20,32 +20,28 @@ const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 // Status config with indicator dots
-const statusConfig: Record<EmployeeStatus, { label: string; color: string; bgColor: string; borderColor: string; dotColor: string }> = {
+const statusConfig: Record<EmployeeStatus, { label: string; color: string; borderColor: string; dotColor: string }> = {
   'Application Received': {
     label: 'Application Received',
-    color: 'text-green-700',
-    bgColor: 'bg-green-50',
+    color: 'text-primary-700',
     borderColor: 'border-green-200',
-    dotColor: 'bg-green-400' // Vibrant mint green
+    dotColor: 'bg-accent-400' // Vibrant mint green
   },
   'Interview Scheduled': {
     label: 'Interview Scheduled',
-    color: 'text-green-700',
-    bgColor: 'bg-green-50', 
+    color: 'text-primary-700',
     borderColor: 'border-green-200',
-    dotColor: 'bg-green-400' // Vibrant mint green
+    dotColor: 'bg-accent-600' // Vibrant mint green
   },
   'Hired': {
     label: 'Hired',
     color: 'text-primary-700',
-    bgColor: 'bg-primary-50',
     borderColor: 'border-primary-200',
     dotColor: 'bg-primary-600' // Deep forest green
   },
   'Not Accepted': {
     label: 'Not Accepted',
-    color: 'text-neutral-400',
-    bgColor: 'bg-neutral-50',
+    color: 'text-primary-700',
     borderColor: 'border-neutral-200',
     dotColor: 'bg-neutral-300' // Muted grey
   }
@@ -56,9 +52,9 @@ const count = computed(() => props.employees.length)
 </script>
 
 <template>
-  <div class="flex flex-col h-full">
+  <div class="flex flex-col h-full justify-center">
     <!-- Column Header -->
-    <div :class="['rounded-t-xl p-4', config.bgColor]">
+    <div :class="['p-4']">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
           <!-- Status Indicator Dot -->
@@ -66,15 +62,18 @@ const count = computed(() => props.employees.length)
           <h3 :class="['font-semibold text-xs uppercase tracking-wider', config.color]">
             {{ config.label }}
           </h3>
+          <span :class="['px-2.5 py-1 rounded-full text-xs font-bold', 'bg-primary-300', config.color]">
+            {{ count }}
+          </span>
         </div>
-        <span :class="['px-2.5 py-1 rounded-full text-xs font-bold', 'bg-white', config.color]">
-          {{ count }}
-        </span>
+          <span :class="['flex text-xl font-bold  jusitfy-center items-center text-neutral-300']">
+            . . .
+          </span>
       </div>
     </div>
 
     <!-- Cards Container -->
-    <div class="flex-1 bg-neutral-100 p-4 rounded-b-2xl border-x border-b border-neutral-200 overflow-y-auto max-h-[450px] scrollbar-hide">
+    <div class="flex-1 p-4 overflow-y-auto max-h-[500px] scrollbar-hide">
       <div v-if="employees.length > 0" class="space-y-4">
         <CandidateCard
           v-for="employee in employees"
