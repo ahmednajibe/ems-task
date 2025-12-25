@@ -11,7 +11,7 @@ import DepartmentModal from '@/components/departments/DepartmentModal.vue'
 import type { Department } from '@/store/departments'
 import { useAuthStore } from '@/store/auth'
 import {
-  ArrowLeftIcon,
+  // ArrowLeftIcon,
   PencilIcon,
   TrashIcon,
   BuildingLibraryIcon,
