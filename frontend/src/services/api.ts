@@ -28,24 +28,21 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Don't redirect if we're on the login page
+    const isOnLoginPage = window.location.pathname === '/login'
+    
     // Only redirect to login if it's an authentication error
-    // NOT if it's a permissions error from a Server Script
-    if (error.response?.status === 401) {
-      // Check if this is truly an auth failure (not just a Server Script error)
-      const isAuthEndpoint = error.config?.url?.includes('/login_with_credentials') || 
-                             error.config?.url?.includes('/get_logged_user')
+    if (error.response?.status === 401 && !isOnLoginPage) {
+      // Check if this is truly an auth failure
+      const hasToken = localStorage.getItem('auth_token')
       
-      if (isAuthEndpoint || !localStorage.getItem('auth_token')) {
-        // Clear auth and redirect only if:
-        // 1. Login endpoint failed, OR
-        // 2. No token exists
-        localStorage.removeItem('auth_token')
-        localStorage.removeItem('auth_user')
+      if (!hasToken) {
+        // No token, redirect to login
         window.location.href = '/login'
       }
     }
     
-    // Log the error but don't redirect on 403 (might be permissions, not auth)
+    // Log 403 errors
     if (error.response?.status === 403) {
       console.error('Permission denied:', error.config?.url)
     }

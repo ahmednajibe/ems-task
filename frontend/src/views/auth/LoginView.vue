@@ -25,7 +25,7 @@
       toastStore.success(`Welcome back, ${authStore.user?.name}!`)
       router.push('/dashboard')
     } else {
-      toastStore.error(authStore.error || 'Login failed')
+      toastStore.error('Invalid credentials. Please try again.')
     }
   }
 </script>
