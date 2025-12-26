@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useCompaniesStore } from './companies'
+import { departmentApi } from '@/services/departmentApi'
 
 export interface Department {
   id: string
@@ -12,45 +13,10 @@ export interface Department {
 export const useDepartmentsStore = defineStore('departments', () => {
   const companiesStore = useCompaniesStore()
 
-  // Mock data
-  const departments = ref<Department[]>([
-    {
-      id: '1',
-      name: 'Engineering',
-      companyId: '1', // Acme Corp
-      employeeCount: 45
-    },
-    {
-      id: '2',
-      name: 'Sales',
-      companyId: '1', // Acme Corp
-      employeeCount: 30
-    },
-    {
-      id: '3',
-      name: 'Marketing',
-      companyId: '1', // Acme Corp
-      employeeCount: 15
-    },
-    {
-      id: '4',
-      name: 'HR',
-      companyId: '2', // Globex Inc
-      employeeCount: 12
-    },
-    {
-      id: '5',
-      name: 'Operations',
-      companyId: '2', // Globex Inc
-      employeeCount: 25
-    },
-    {
-      id: '6',
-      name: 'Finance',
-      companyId: '3', // Soylent Corp
-      employeeCount: 20
-    }
-  ])
+  // State
+  const departments = ref<Department[]>([])
+  const isLoading = ref(false)
+  const error = ref<string | null>(null)
 
   // Search & Pagination
   const searchQuery = ref('')
@@ -85,31 +51,77 @@ export const useDepartmentsStore = defineStore('departments', () => {
 
   const totalCount = computed(() => filteredDepartments.value.length)
 
+  // Fetch departments from API
+  async function fetchDepartments() {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      departments.value = await departmentApi.getAll()
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to fetch departments'
+      console.error('Error fetching departments:', err)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   // Get departments by company
   const getDepartmentsByCompany = (companyId: string) => {
     return departments.value.filter(d => d.companyId === companyId)
   }
 
   // CRUD Actions
-  function addDepartment(dept: Omit<Department, 'id'>) {
-    const newDept: Department = {
-      ...dept,
-      id: Date.now().toString()
+  async function addDepartment(dept: Omit<Department, 'id' | 'employeeCount'>) {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      const newDept = await departmentApi.create(dept)
+      departments.value.push(newDept)
+      return newDept
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to add department'
+      throw err
+    } finally {
+      isLoading.value = false
     }
-    departments.value.push(newDept)
   }
 
-  function updateDepartment(id: string, updates: Partial<Department>) {
-    const index = departments.value.findIndex(d => d.id === id)
-    if (index !== -1) {
-      departments.value[index] = { ...departments.value[index], ...updates } as Department
+  async function updateDepartment(id: string, updates: Partial<Department>) {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      const updated = await departmentApi.update(id, updates)
+      const index = departments.value.findIndex(d => d.id === id)
+      if (index !== -1) {
+        departments.value[index] = updated
+      }
+      return updated
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to update department'
+      throw err
+    } finally {
+      isLoading.value = false
     }
   }
 
-  function deleteDepartment(id: string) {
-    const index = departments.value.findIndex(d => d.id === id)
-    if (index !== -1) {
-      departments.value.splice(index, 1)
+  async function deleteDepartment(id: string) {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      await departmentApi.delete(id)
+      const index = departments.value.findIndex(d => d.id === id)
+      if (index !== -1) {
+        departments.value.splice(index, 1)
+      }
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to delete department'
+      throw err
+    } finally {
+      isLoading.value = false
     }
   }
 
@@ -135,8 +147,13 @@ export const useDepartmentsStore = defineStore('departments', () => {
     currentPage.value = 1
   }
 
+  // Load departments on initialization
+  fetchDepartments()
+
   return {
     departments,
+    isLoading,
+    error,
     searchQuery,
     currentPage,
     itemsPerPage,
@@ -144,6 +161,7 @@ export const useDepartmentsStore = defineStore('departments', () => {
     paginatedDepartments,
     totalPages,
     totalCount,
+    fetchDepartments,
     getDepartmentsByCompany,
     addDepartment,
     updateDepartment,

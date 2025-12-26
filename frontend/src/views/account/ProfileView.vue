@@ -74,20 +74,46 @@ const cancelEdit = () => {
   isEditing.value = false
 }
 
-const saveChanges = () => {
+const saveChanges = async () => {
   if (!formData.value.name || !formData.value.email) {
     toastStore.error('Name and email are required')
     return
   }
   
-  if (authStore.user) {
-    authStore.user.name = formData.value.name
-    authStore.user.email = formData.value.email
-    localStorage.setItem('auth_user', JSON.stringify(authStore.user))
-  }
+  if (!authStore.user) return
   
-  toastStore.success('Profile updated successfully!')
-  isEditing.value = false
+  console.log('🔵 Attempting to save profile...', {
+    name: formData.value.name,
+    email: formData.value.email
+  })
+  
+  try {
+    const { userApi } = await import('@/services/userApi')
+    
+    console.log('🔵 userApi loaded:', userApi)
+    
+    const result = await userApi.updateProfile({
+      full_name: formData.value.name,
+      email: formData.value.email
+    })
+    
+    console.log('🔵 Result:', result)
+    
+    if (result.success) {
+      // Update local state
+      authStore.user.name = formData.value.name
+      authStore.user.email = formData.value.email
+      localStorage.setItem('auth_user', JSON.stringify(authStore.user))
+      
+      toastStore.success('Profile updated successfully!')
+      isEditing.value = false
+    } else {
+      toastStore.error(result.message || 'Failed to update profile')
+    }
+  } catch (error) {
+    console.error('❌ Error saving profile:', error)
+    toastStore.error('Failed to update profile')
+  }
 }
 
 // Password change functions
@@ -119,7 +145,7 @@ const cancelPasswordChange = () => {
   }
 }
 
-const changePassword = () => {
+const changePassword = async () => {
   if (!passwordForm.value.currentPassword || !passwordForm.value.newPassword || !passwordForm.value.confirmPassword) {
     toastStore.error('All password fields are required')
     return
@@ -135,15 +161,24 @@ const changePassword = () => {
     return
   }
   
-  if (passwordForm.value.currentPassword !== 'admin123' && 
-      passwordForm.value.currentPassword !== 'manager123' && 
-      passwordForm.value.currentPassword !== 'employee123') {
-    toastStore.error('Current password is incorrect')
-    return
+  try {
+    const { userApi } = await import('@/services/userApi')
+    
+    const result = await userApi.changePassword({
+      old_password: passwordForm.value.currentPassword,
+      new_password: passwordForm.value.newPassword
+    })
+    
+    if (result.success) {
+      toastStore.success('Password changed successfully!')
+      cancelPasswordChange()
+    } else {
+      toastStore.error(result.message || 'Failed to change password')
+    }
+  } catch (error) {
+    toastStore.error('Failed to change password')
+    console.error(error)
   }
-  
-  toastStore.success('Password changed successfully!')
-  cancelPasswordChange()
 }
 </script>
 

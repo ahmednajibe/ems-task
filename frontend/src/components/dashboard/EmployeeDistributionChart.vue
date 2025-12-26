@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { Bar } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -11,7 +11,7 @@ import {
   Legend,
   type ChartOptions
 } from 'chart.js'
-import { useDepartmentsStore } from '@/store/departments'
+import { useCompaniesStore } from '@/store/companies'
 import { useEmployeesStore } from '@/store/employees'
 
 ChartJS.register(
@@ -23,26 +23,55 @@ ChartJS.register(
   Legend
 )
 
-const departmentsStore = useDepartmentsStore()
+const companiesStore = useCompaniesStore()
 const employeesStore = useEmployeesStore()
 
-// Calculate employee count per department
-const departmentDistribution = computed(() => {
-  return departmentsStore.departments.map(dept => ({
-    name: dept.name,
-    count: employeesStore.employees.filter(emp => emp.departmentId === dept.id).length
+// Responsive bar thickness
+const windowWidth = ref(window.innerWidth)
+
+const updateWidth = () => {
+  windowWidth.value = window.innerWidth
+}
+
+onMounted(() => {
+  window.addEventListener('resize', updateWidth)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateWidth)
+})
+
+// Bar thickness based on screen size
+const barThickness = computed(() => {
+  if (windowWidth.value < 640) return 40  // Mobile (sm)
+  if (windowWidth.value < 1024) return 60  // Tablet (md)
+  return 100  // Desktop (lg+)
+})
+
+// Calculate employee count per company and get Top 5
+const companyDistribution = computed(() => {
+  // Count employees for each company
+  const companiesWithCount = companiesStore.companies.map(company => ({
+    name: company.name,
+    count: employeesStore.employees.filter(emp => emp.companyId === company.id).length
   }))
+  
+  // Sort by employee count (descending) and take top 5
+  return companiesWithCount
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5)
 })
 
 // Get max value for track effect
 const maxValue = computed(() => {
-  const values = departmentDistribution.value.map(d => d.count)
+  const values = companyDistribution.value.map(d => d.count)
   return values.length > 0 ? Math.max(...values) * 1.2 : 100
 })
 
+
 const chartData = computed(() => {
-  const labels = departmentDistribution.value.map(d => d.name)
-  const data = departmentDistribution.value.map(d => d.count)
+  const labels = companyDistribution.value.map(d => d.name)
+  const data = companyDistribution.value.map(d => d.count)
 
   return {
     labels,
@@ -53,7 +82,7 @@ const chartData = computed(() => {
         data: data.map(() => maxValue.value),
         backgroundColor: '#E8F5E8',
         borderRadius: 12,
-        barThickness: 100,
+        barThickness: barThickness.value,  // ← Responsive!
         order: 1,  // ← Render first (behind)
       },
       // Actual data bars (dark green) - ORDER 0 (front)
@@ -62,7 +91,7 @@ const chartData = computed(() => {
         data,
         backgroundColor: '#2D5A43',
         borderRadius: 12,
-        barThickness: 100,
+        barThickness: barThickness.value,  // ← Responsive!
         order: 0,  // ← Render second (in front)
       }
     ]

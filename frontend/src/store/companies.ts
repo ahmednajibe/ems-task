@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { companyApi } from '@/services/companyApi'
 
 // Company interface
 export interface Company {
@@ -10,39 +11,10 @@ export interface Company {
 }
 
 export const useCompaniesStore = defineStore('companies', () => {
-  // Mock data
-  const companies = ref<Company[]>([
-    {
-        id: '1',
-        name: 'Acme Corp',
-        departmentCount: 5,
-        employeeCount: 124
-    },
-    {
-        id: '2',
-        name: 'Globex Inc.',
-        departmentCount: 3,
-        employeeCount: 85
-    },
-    {
-        id: '3',
-        name: 'Soylent Corp',
-        departmentCount: 8,
-        employeeCount: 340
-    },
-    {
-        id: '4',
-        name: 'Umbrella Corp',
-        departmentCount: 12,
-        employeeCount: 5000
-    },
-    {
-        id: '5',
-        name: 'Cyberdyne Systems',
-        departmentCount: 4,
-        employeeCount: 200
-    }
-    ])
+  // State
+  const companies = ref<Company[]>([])
+  const isLoading = ref(false)
+  const error = ref<string | null>(null)
 
   // Search query
   const searchQuery = ref('')
@@ -76,26 +48,72 @@ export const useCompaniesStore = defineStore('companies', () => {
   // Total count
   const totalCount = computed(() => filteredCompanies.value.length)
 
+  // Fetch companies from API
+  async function fetchCompanies() {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      companies.value = await companyApi.getAll()
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to fetch companies'
+      console.error('Error fetching companies:', err)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   // CRUD Actions
-  function addCompany(company: Omit<Company, 'id'>) {
-    const newCompany: Company = {
-      ...company,
-      id: Date.now().toString()
+  async function addCompany(company: Omit<Company, 'id' | 'departmentCount' | 'employeeCount'>) {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      const newCompany = await companyApi.create(company)
+      companies.value.push(newCompany)
+      return newCompany
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to add company'
+      throw err
+    } finally {
+      isLoading.value = false
     }
-    companies.value.push(newCompany)
   }
 
-  function updateCompany(id: string, updates: Partial<Company>) {
-    const index = companies.value.findIndex(c => c.id === id)
-    if (index !== -1) {
-      companies.value[index] = { ...companies.value[index], ...updates }as Company
+  async function updateCompany(id: string, updates: Partial<Company>) {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      const updated = await companyApi.update(id, updates)
+      const index = companies.value.findIndex(c => c.id === id)
+      if (index !== -1) {
+        companies.value[index] = updated
+      }
+      return updated
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to update company'
+      throw err
+    } finally {
+      isLoading.value = false
     }
   }
 
-  function deleteCompany(id: string) {
-    const index = companies.value.findIndex(c => c.id === id)
-    if (index !== -1) {
-      companies.value.splice(index, 1)
+  async function deleteCompany(id: string) {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      await companyApi.delete(id)
+      const index = companies.value.findIndex(c => c.id === id)
+      if (index !== -1) {
+        companies.value.splice(index, 1)
+      }
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to delete company'
+      throw err
+    } finally {
+      isLoading.value = false
     }
   }
 
@@ -121,8 +139,13 @@ export const useCompaniesStore = defineStore('companies', () => {
     currentPage.value = 1 // Reset to first page when searching
   }
 
+  // Load companies on initialization
+  fetchCompanies()
+
   return {
     companies,
+    isLoading,
+    error,
     searchQuery,
     currentPage,
     itemsPerPage,
@@ -130,6 +153,7 @@ export const useCompaniesStore = defineStore('companies', () => {
     paginatedCompanies,
     totalPages,
     totalCount,
+    fetchCompanies,
     addCompany,
     updateCompany,
     deleteCompany,

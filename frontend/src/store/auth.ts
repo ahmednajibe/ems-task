@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-// import { useToastStore } from './toast'
+import { authApi } from '@/services/authApi'
 
 // User interface
 interface User {
@@ -29,50 +29,16 @@ export const useAuthStore = defineStore('auth', () => {
   async function login(email: string, password: string) {
     isLoading.value = true
     error.value = null
-
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      const mockUsers: Record<string, User & { password: string }> = {
-        'admin@org.com': {
-          id: '1',
-          email: 'admin@org.com',
-          password: 'admin123',
-          name: 'Admin User',
-          role: 'admin',
-          avatar: 'AD'
-        },
-        'manager@org.com': {
-          id: '2',
-          email: 'manager@org.com',
-          password: 'manager123',
-          name: 'Manager User',
-          role: 'manager',
-          avatar: 'MU'
-        },
-        'employee@org.com': {
-          id: '3',
-          email: 'employee@org.com',
-          password: 'employee123',
-          name: 'Employee User',
-          role: 'employee',
-          avatar: 'EU'
-        }
+      const result = await authApi.login(email, password)
+      
+      if (!result.success || !result.data) {
+        error.value = result.message || 'Login failed'
+        return false
       }
 
-      const foundUser = mockUsers[email]
-
-      if (!foundUser || foundUser.password !== password) {
-        throw new Error('Invalid email or password')
-      }
-
-      const { password: _, ...userData } = foundUser
-      user.value = userData
-      token.value = 'mock-jwt-token-' + Date.now()
-
-      localStorage.setItem('auth_token', token.value)
-      localStorage.setItem('auth_user', JSON.stringify(userData))
-
+      user.value = result.data.user
+      token.value = result.data.token
       return true
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Login failed'
@@ -83,19 +49,27 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function logout() {
+    authApi.logout()
     user.value = null
     token.value = null
-    localStorage.removeItem('auth_token')
-    localStorage.removeItem('auth_user')
   }
 
-  function restoreSession() {
+  async function restoreSession() {
     const savedToken = localStorage.getItem('auth_token')
     const savedUser = localStorage.getItem('auth_user')
-
+    
     if (savedToken && savedUser) {
+      // Restore immediately for better UX
       token.value = savedToken
       user.value = JSON.parse(savedUser)
+      
+      // Verify in background (optional)
+      try {
+        await authApi.verifyToken()
+      } catch (error) {
+        // If token is invalid, interceptor will handle logout
+        console.error('Token verification failed:', error)
+      }
     }
   }
 

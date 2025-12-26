@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { employeeApi } from '@/services/employeeApi'
 
 export type EmployeeStatus = 'Application Received' | 'Interview Scheduled' | 'Hired' | 'Not Accepted'
 
@@ -17,56 +18,10 @@ export interface Employee {
 }
 
 export const useEmployeesStore = defineStore('employees', () => {
-  // Mock data
-  const employees = ref<Employee[]>([
-    {
-      id: '1',
-      name: 'John Doe',
-      email: 'john.doe@acme.com',
-      mobile: '+1234567890',
-      address: '123 Main St, San Francisco, CA',
-      designation: 'Senior Software Engineer',
-      companyId: '1', // Acme Corp
-      departmentId: '1', // Engineering
-      status: 'Hired',
-      hiredOn: '2023-01-15'
-    },
-    {
-      id: '2',
-      name: 'Jane Smith',
-      email: 'jane.smith@acme.com',
-      mobile: '+1234567891',
-      address: '456 Oak Ave, San Francisco, CA',
-      designation: 'Sales Manager',
-      companyId: '1', // Acme Corp
-      departmentId: '2', // Sales
-      status: 'Hired',
-      hiredOn: '2023-03-20'
-    },
-    {
-      id: '3',
-      name: 'Bob Wilson',
-      email: 'bob.wilson@globex.com',
-      mobile: '+1234567892',
-      address: '789 Pine Rd, New York, NY',
-      designation: 'HR Specialist',
-      companyId: '2', // Globex Inc
-      departmentId: '4', // HR
-      status: 'Hired',
-      hiredOn: '2023-06-10'
-    },
-    {
-      id: '4',
-      name: 'Alice Brown',
-      email: 'alice.brown@acme.com',
-      mobile: '+1234567893',
-      address: '321 Elm St, San Francisco, CA',
-      designation: 'Marketing Coordinator',
-      companyId: '1',
-      departmentId: '3', // Marketing
-      status: 'Interview Scheduled'
-    }
-  ])
+  // State
+  const employees = ref<Employee[]>([])
+  const isLoading = ref(false)
+  const error = ref<string | null>(null)
 
   // Search & Pagination
   const searchQuery = ref('')
@@ -98,6 +53,21 @@ export const useEmployeesStore = defineStore('employees', () => {
 
   const totalCount = computed(() => filteredEmployees.value.length)
 
+  // Fetch employees from API
+  async function fetchEmployees() {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      employees.value = await employeeApi.getAll()
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to fetch employees'
+      console.error('Error fetching employees:', err)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   // Calculate days employed
   const getDaysEmployed = (employee: Employee): number => {
     if (employee.status !== 'Hired' || !employee.hiredOn) return 0
@@ -120,25 +90,56 @@ export const useEmployeesStore = defineStore('employees', () => {
   }
 
   // CRUD
-  function addEmployee(emp: Omit<Employee, 'id'>) {
-    const newEmployee: Employee = {
-      ...emp,
-      id: Date.now().toString()
+  async function addEmployee(emp: Omit<Employee, 'id'>) {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      const newEmployee = await employeeApi.create(emp)
+      employees.value.push(newEmployee)
+      return newEmployee
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to add employee'
+      throw err
+    } finally {
+      isLoading.value = false
     }
-    employees.value.push(newEmployee)
   }
 
-  function updateEmployee(id: string, updates: Partial<Employee>) {
-    const index = employees.value.findIndex(e => e.id === id)
-    if (index !== -1) {
-      employees.value[index] = { ...employees.value[index], ...updates } as Employee
+  async function updateEmployee(id: string, updates: Partial<Employee>) {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      const updated = await employeeApi.update(id, updates)
+      const index = employees.value.findIndex(e => e.id === id)
+      if (index !== -1) {
+        employees.value[index] = updated
+      }
+      return updated
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to update employee'
+      throw err
+    } finally {
+      isLoading.value = false
     }
   }
 
-  function deleteEmployee(id: string) {
-    const index = employees.value.findIndex(e => e.id === id)
-    if (index !== -1) {
-      employees.value.splice(index, 1)
+  async function deleteEmployee(id: string) {
+    isLoading.value = true
+    error.value = null
+    
+    try {
+      await employeeApi.delete(id)
+      const index = employees.value.findIndex(e => e.id === id)
+      if (index !== -1) {
+        employees.value.splice(index, 1)
+      }
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to delete employee'
+      throw err
+    } finally {
+      isLoading.value = false
     }
   }
 
@@ -164,8 +165,13 @@ export const useEmployeesStore = defineStore('employees', () => {
     currentPage.value = 1
   }
 
+  // Load employees on initialization
+  fetchEmployees()
+
   return {
     employees,
+    isLoading,
+    error,
     searchQuery,
     currentPage,
     itemsPerPage,
@@ -173,6 +179,7 @@ export const useEmployeesStore = defineStore('employees', () => {
     paginatedEmployees,
     totalPages,
     totalCount,
+    fetchEmployees,
     getDaysEmployed,
     getEmployeesByCompany,
     getEmployeesByDepartment,

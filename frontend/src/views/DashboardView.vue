@@ -112,10 +112,10 @@
           </router-link>
         </div>
 
-        <!-- Employee Distribution Chart -->
+        <!-- Top Companies Chart -->
         <div class="bg-white shadow-soft rounded-2xl p-6">
           <h3 class="text-lg font-semibold text-neutral-800 mb-4">
-            📊 Employee Distribution by Department
+            📊 Top 5 Companies by Employee Count
           </h3>
           <EmployeeDistributionChart />
         </div>
